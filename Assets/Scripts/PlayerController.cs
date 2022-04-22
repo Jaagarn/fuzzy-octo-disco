@@ -2,33 +2,67 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private float rotateSpeed = 30.0f;
-    private float speed = 5.0f;
+    private float speed = 10.0f;
     private Rigidbody playerRb;
+    private float horizontalInput;
+    private float verticalInput;
+    private Vector3 movementVector;
+    private int activeCamera;
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
+        activeCamera = MasterCameraController.enabledCamera;
     }
 
     void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
 
-        playerRb.AddForce(Vector3.forward * speed * verticalInput * -1);
-        playerRb.AddForce(Vector3.right * speed * horizontalInput * -1);
+        movementVector.y = 0;
 
-        if (horizontalInput > 0)
-            transform.Rotate(Vector3.forward * rotateSpeed * verticalInput);
+        activeCamera = MasterCameraController.enabledCamera;
 
-        if (verticalInput > 0)
-            transform.Rotate(Vector3.right * rotateSpeed * verticalInput);
+        InverseDependingOnCamera();
 
-        if (Input.GetKeyDown( KeyCode.Space))
-            playerRb.AddForce(Vector3.up * 100.0f);
+        if (Input.GetKeyDown(KeyCode.Space))
+            playerRb.AddForce(Vector3.up * 200.0f);
 
         if (playerRb.position.y <= -1f)
             playerRb.position = new Vector3(0, 10f, 0);
+    }
+    
+    private void InverseDependingOnCamera() 
+    {
+        switch (activeCamera)
+        {
+            case 1:
+                movementVector.x = horizontalInput;
+                movementVector.z = verticalInput;
+                break;
+            case 2:
+                movementVector.x = verticalInput;
+                movementVector.z = horizontalInput * -1;
+                break;
+            case 3:
+                movementVector.x = horizontalInput * -1;
+                movementVector.z = verticalInput * -1;
+                break;
+            case 4:
+                movementVector.x = verticalInput * -1;
+                movementVector.z = horizontalInput;
+                break;
+            default:
+                movementVector.x = horizontalInput;
+                movementVector.z = verticalInput;
+                break;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        playerRb.AddForce(Vector3.forward * movementVector.z * speed);
+        playerRb.AddForce(Vector3.right * movementVector.x * speed);
     }
 }
