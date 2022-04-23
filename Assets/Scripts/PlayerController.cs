@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private float speed = 10.0f;
+    private float speed = 5.0f;
+    private float maxSpeed = 40.0f;
     private Rigidbody playerRb;
     private float horizontalInput;
     private float verticalInput;
     private Vector3 movementVector;
     private int activeCamera;
+    private bool isBreaking = false;
+    private bool isGrounded = true;
 
     void Start()
     {
@@ -24,9 +27,21 @@ public class PlayerController : MonoBehaviour
 
         activeCamera = MasterCameraController.enabledCamera;
 
+        if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded)
+        {
+            playerRb.angularDrag = 15.0f;
+            isBreaking = true;
+        }
+            
+        if (Input.GetKeyUp(KeyCode.LeftShift) && isGrounded)
+        {
+            playerRb.angularDrag = 0.05f;
+            isBreaking = false;
+        }
+
         InverseDependingOnCamera();
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             playerRb.AddForce(Vector3.up * 200.0f);
 
         if (playerRb.position.y <= -1f)
@@ -60,9 +75,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        isGrounded = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
+    }
+
     private void FixedUpdate()
     {
-        playerRb.AddForce(Vector3.forward * movementVector.z * speed);
-        playerRb.AddForce(Vector3.right * movementVector.x * speed);
+        if(!isBreaking && isGrounded && !(playerRb.velocity.magnitude >= maxSpeed))
+        {
+            playerRb.AddForce(Vector3.forward * movementVector.z * speed);
+            playerRb.AddForce(Vector3.right * movementVector.x * speed);
+        }
     }
 }
