@@ -2,30 +2,23 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private float speed = 5.0f;
-    private float maxSpeed = 40.0f;
+    private float speed = 10.0f;
+    private float maxSpeed = 160.0f;
     private Rigidbody playerRb;
-    private float horizontalInput;
+    private GameObject mainCamera;
     private float verticalInput;
-    private Vector3 movementVector;
-    private int activeCamera;
     private bool isBreaking = false;
     private bool isGrounded = true;
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
-        activeCamera = MasterCameraController.enabledCamera;
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
 
     void Update()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
-
-        movementVector.y = 0;
-
-        activeCamera = MasterCameraController.enabledCamera;
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded)
         {
@@ -33,46 +26,17 @@ public class PlayerController : MonoBehaviour
             isBreaking = true;
         }
             
-        if (Input.GetKeyUp(KeyCode.LeftShift) && isGrounded)
+        if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             playerRb.angularDrag = 0.05f;
             isBreaking = false;
         }
 
-        InverseDependingOnCamera();
-
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             playerRb.AddForce(Vector3.up * 200.0f);
 
         if (playerRb.position.y <= -1f)
-            playerRb.position = new Vector3(0, 10f, 0);
-    }
-    
-    private void InverseDependingOnCamera() 
-    {
-        switch (activeCamera)
-        {
-            case 1:
-                movementVector.x = horizontalInput;
-                movementVector.z = verticalInput;
-                break;
-            case 2:
-                movementVector.x = verticalInput;
-                movementVector.z = horizontalInput * -1;
-                break;
-            case 3:
-                movementVector.x = horizontalInput * -1;
-                movementVector.z = verticalInput * -1;
-                break;
-            case 4:
-                movementVector.x = verticalInput * -1;
-                movementVector.z = horizontalInput;
-                break;
-            default:
-                movementVector.x = horizontalInput;
-                movementVector.z = verticalInput;
-                break;
-        }
+            playerRb.position = new Vector3(0, 0.5f, 0);
     }
 
     private void OnCollisionStay(Collision collision)
@@ -89,8 +53,10 @@ public class PlayerController : MonoBehaviour
     {
         if(!isBreaking && isGrounded && !(playerRb.velocity.magnitude >= maxSpeed))
         {
-            playerRb.AddForce(Vector3.forward * movementVector.z * speed);
-            playerRb.AddForce(Vector3.right * movementVector.x * speed);
+            var verticallVector = (mainCamera.transform.forward * verticalInput * speed);
+            verticallVector.y = 0;
+
+            playerRb.AddForce(verticallVector);
         }
     }
 }
