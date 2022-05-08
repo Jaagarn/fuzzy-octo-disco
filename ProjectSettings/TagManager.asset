@@ -9,6 +9,9 @@ TagManager:
   - ThirdCamera
   - FourthCamera
   - CameraHolder
+  - StartLine
+  - FinishLine
+  - LapTimerText
   layers:
   - Default
   - TransparentFX
