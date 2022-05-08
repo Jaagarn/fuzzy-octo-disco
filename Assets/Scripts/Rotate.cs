@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
-    float rotationSpeed = 20.0f;
+    private const float rotationSpeed = 20.0f;
 
     void Update()
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Disappear : MonoBehaviour
 {
-    private float visibleTime = 5.0f;
+    private const float visibleTime = 5.0f;
     private float nextVisibleTime = 0.0f;
     private bool isVisible = false;
 
@@ -32,7 +32,7 @@ public class Disappear : MonoBehaviour
             else
             {
                 GetComponent<BoxCollider>().enabled = false;
-                gameObject.GetComponent<Renderer>().material.color. = transparentColor;
+                gameObject.GetComponent<Renderer>().material.color = transparentColor;
                 isVisible = false;
             }
         }
