@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private float speed = 10.0f;
-    private float maxSpeed = 160.0f;
+    private const float speed = 10.0f;
+    private const float maxSpeed = 160.0f;
     private Rigidbody playerRb;
     private GameObject mainCamera;
     private Vector3 startingPlayerPosition;
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
     {
         if(!isBreaking && isGrounded && !(playerRb.velocity.magnitude >= maxSpeed))
         {
-            var verticallVector = (mainCamera.transform.forward * verticalInput * speed);
+            var verticallVector = mainCamera.transform.forward * verticalInput * speed;
             verticallVector.y = 0;
 
             playerRb.AddForce(verticallVector);

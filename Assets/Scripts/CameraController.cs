@@ -5,6 +5,7 @@ public class CameraController : MonoBehaviour
 
     private GameObject player;
     private Quaternion originalAngle;
+    private const int invertRoatationSpeed = -90;
 
     void Start()
     {
@@ -16,13 +17,12 @@ public class CameraController : MonoBehaviour
     {
         var horizontalInput = Input.GetAxis("Horizontal");
 
-        var rotation = horizontalInput * -90 * Time.deltaTime;
+        var rotation = horizontalInput * invertRoatationSpeed * Time.deltaTime;
 
         transform.RotateAround(player.transform.position, Vector3.down, rotation);
 
         if (Input.GetKey(KeyCode.Alpha1))
             transform.SetPositionAndRotation(transform.position, originalAngle);
-
     }
 
     void LateUpdate()
@@ -35,6 +35,5 @@ public class CameraController : MonoBehaviour
             transform.SetPositionAndRotation(transform.position, originalAngle);
             PlayerController.resetCamera = false;
         }
-            
     }
 }
