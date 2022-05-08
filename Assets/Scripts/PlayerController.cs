@@ -12,7 +12,9 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded = true;
 
     // Make event. Lazy
+    // This is truly terrible
     public static bool resetCamera = false;
+    public static bool resetTimer = false;
 
     void Start()
     {
@@ -40,10 +42,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             playerRb.AddForce(Vector3.up * 200.0f);
 
-        if (playerRb.position.y <= -2.0f)
+        if (playerRb.position.y <= -4.0f)
         {
             playerRb.position = startingPlayerPosition;
             resetCamera = true;
+            resetTimer = true;
         }
     }
 
