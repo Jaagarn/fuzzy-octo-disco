@@ -28,5 +28,13 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         transform.position = player.transform.position;
+
+        // Make to an event. You lazy
+        if (PlayerController.resetCamera)
+        {
+            transform.SetPositionAndRotation(transform.position, originalAngle);
+            PlayerController.resetCamera = false;
+        }
+            
     }
 }
