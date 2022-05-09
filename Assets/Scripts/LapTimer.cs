@@ -4,10 +4,21 @@ using UnityEngine.UI;
 public class LapTimer : MonoBehaviour
 {
     private bool hasStartedLap = false;
-    private float elapsedTime;
-    private float bestTime;
-    private string bestTimeString = "-";
+
     private float startTime;
+    private float elapsedTime;
+
+    private float currentLapTime;
+    private float bestTime;
+
+    private float checkPointTime;
+    private float bestCheckPointTime;
+
+    private string checkPointTimeString = "-";
+    private string bestTimeString = "-";
+    private string bestCheckPointTimeString = "-";
+    
+    private bool hasPassedCheckPoint = false;
     private GameObject lapTimerText;
 
     private void Start()
@@ -18,9 +29,11 @@ public class LapTimer : MonoBehaviour
     private void FixedUpdate()
     {
         if (hasStartedLap)
+        {
             elapsedTime = Time.time - startTime;
+        }
 
-        lapTimerText.GetComponent<Text>().text = $"Current lap time: {FormatTime(elapsedTime)} \nBest time: {bestTimeString}";
+        lapTimerText.GetComponent<Text>().text = $"Current lap time: {FormatTime(elapsedTime)}\nCheckpoint time: {checkPointTimeString}\n\nBest lap time: {bestTimeString}\nBest checkpoint time: {bestCheckPointTimeString}";
     }
 
     private void LateUpdate()
@@ -43,26 +56,48 @@ public class LapTimer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("FinishLine") && hasPassedCheckPoint)
+        {
+            var lapTime = elapsedTime;
+            hasStartedLap = false;
+            hasPassedCheckPoint = false;
+
+            if (bestTime == default)
+            {
+                bestTime = lapTime;
+                bestTimeString = FormatTime(bestTime);
+            }
+            else if (bestTime > lapTime)
+            {
+                bestTime = lapTime;
+                bestTimeString = FormatTime(bestTime);
+            }
+        }
+
+        if (other.CompareTag("CheckPoint"))
+        {
+            hasPassedCheckPoint = true;
+            checkPointTime = elapsedTime;
+            checkPointTimeString = FormatTime(checkPointTime);
+
+            if (bestCheckPointTime == default)
+            {
+                bestCheckPointTime = checkPointTime;
+                bestCheckPointTimeString = FormatTime(bestCheckPointTime);
+            }
+            else if (bestCheckPointTime > checkPointTime)
+            {
+                bestCheckPointTime = checkPointTime;
+                bestCheckPointTimeString = FormatTime(bestCheckPointTime);
+            }
+        }
+
         if (other.CompareTag("StartLine")) 
         {
             hasStartedLap = true;
+            checkPointTimeString = "-";
             startTime = Time.time;
         }
 
-        if (other.CompareTag("FinishLine"))
-        {
-            hasStartedLap = false;
-            if (bestTime == default)
-            {
-                bestTime = elapsedTime;
-                bestTimeString = FormatTime(bestTime);
-            }
-            else if (bestTime > elapsedTime) 
-            {
-                bestTime = elapsedTime;
-                bestTimeString = FormatTime(bestTime);
-            }
-                
-        }
     }
 }

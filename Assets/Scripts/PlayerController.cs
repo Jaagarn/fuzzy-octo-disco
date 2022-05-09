@@ -40,11 +40,25 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
             playerRb.AddForce(Vector3.up * 200.0f);
+            isGrounded = false;
+        }
 
         if (playerRb.position.y <= -4.0f || Input.GetKeyDown(KeyCode.R))
         {
             playerRb.position = startingPlayerPosition;
+            playerRb.velocity = Vector3.zero;
+            resetCamera = true;
+            resetTimer = true;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("FourthCamera"))
+        {
+            playerRb.position = new Vector3(28f, 5f, 2.6f);
             playerRb.velocity = Vector3.zero;
             resetCamera = true;
             resetTimer = true;
