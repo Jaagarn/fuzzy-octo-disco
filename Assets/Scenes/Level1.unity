@@ -2934,10 +2934,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: SimpleSlide (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 3789484018112712527, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cec10f785d7f15546979ef6b1bee2ead, type: 2}
     - target: {fileID: 3789484019475316955, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 814e0b72d5dc7234a95b207c2266dfa3, type: 2}
+      objectReference: {fileID: 2100000, guid: cec10f785d7f15546979ef6b1bee2ead, type: 2}
+    - target: {fileID: 7287779549878013028, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cec10f785d7f15546979ef6b1bee2ead, type: 2}
     - target: {fileID: 7998225134548104167, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -4927,7 +4935,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 656704137844079280, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
   m_PrefabInstance: {fileID: 1755092719}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1782201205
+--- !u!114 &1782201209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5233,7 +5241,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3789484018112712525, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
   m_PrefabInstance: {fileID: 1755092719}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1992318019
+--- !u!114 &1992318023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

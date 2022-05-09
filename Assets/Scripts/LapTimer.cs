@@ -56,7 +56,7 @@ public class LapTimer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("FinishLine") && hasPassedCheckPoint)
+        if (other.CompareTag("FinishLine") && hasPassedCheckPoint && hasStartedLap)
         {
             var lapTime = elapsedTime;
             hasStartedLap = false;
