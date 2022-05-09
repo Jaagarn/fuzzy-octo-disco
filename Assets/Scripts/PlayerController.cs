@@ -42,9 +42,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             playerRb.AddForce(Vector3.up * 200.0f);
 
-        if (playerRb.position.y <= -4.0f)
+        if (playerRb.position.y <= -4.0f || Input.GetKeyDown(KeyCode.R))
         {
             playerRb.position = startingPlayerPosition;
+            playerRb.velocity = Vector3.zero;
             resetCamera = true;
             resetTimer = true;
         }
