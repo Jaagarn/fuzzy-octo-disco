@@ -35,9 +35,10 @@ public class LapTimer : MonoBehaviour
 
     public string FormatTime(float time)
     {
-        float seconds = time;
-        float milliseconds = (time * 1000.0f) % 1000.0f;
-        return string.Format("{0:00}:{1:000}", seconds, milliseconds);
+        int minutes = (int)time / 60; 
+        int seconds = (int)time % 60;
+        int milliseconds =(int) ((time * 100.0f) % 100.0f);
+        return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -59,6 +60,7 @@ public class LapTimer : MonoBehaviour
             else if (bestTime > elapsedTime) 
             {
                 bestTime = elapsedTime;
+                bestTimeString = FormatTime(bestTime);
             }
                 
         }
