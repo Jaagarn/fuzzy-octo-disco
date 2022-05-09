@@ -8,7 +8,6 @@ public class LapTimer : MonoBehaviour
     private float startTime;
     private float elapsedTime;
 
-    private float currentLapTime;
     private float bestTime;
 
     private float checkPointTime;
@@ -42,6 +41,7 @@ public class LapTimer : MonoBehaviour
         {
             elapsedTime = 0f;
             hasStartedLap = false;
+            hasPassedCheckPoint = false;
             PlayerController.resetTimer = false;
         }
     }

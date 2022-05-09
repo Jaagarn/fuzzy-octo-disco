@@ -32,7 +32,7 @@ public class Disappear : MonoBehaviour
                 isVisible = true;
                 ticks = 0;
             }
-            else if (ticks == 3)
+            else if (ticks == 4)
             {
                 GetComponent<BoxCollider>().enabled = false;
                 gameObject.GetComponent<Renderer>().material.color = transparentColor;
