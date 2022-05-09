@@ -12,6 +12,8 @@ TagManager:
   - StartLine
   - FinishLine
   - LapTimerText
+  - CheckPoint
+  - PassCheckPointText
   layers:
   - Default
   - TransparentFX
