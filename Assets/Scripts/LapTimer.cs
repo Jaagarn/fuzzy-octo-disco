@@ -42,6 +42,7 @@ public class LapTimer : MonoBehaviour
             elapsedTime = 0f;
             hasStartedLap = false;
             hasPassedCheckPoint = false;
+            checkPointTimeString = "-";
             PlayerController.resetTimer = false;
         }
     }
@@ -74,7 +75,7 @@ public class LapTimer : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("CheckPoint"))
+        if (other.CompareTag("CheckPoint") && hasStartedLap && !hasPassedCheckPoint)
         {
             hasPassedCheckPoint = true;
             checkPointTime = elapsedTime;
@@ -92,7 +93,7 @@ public class LapTimer : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("StartLine")) 
+        if (other.CompareTag("StartLine") && !hasStartedLap && !hasPassedCheckPoint) 
         {
             hasStartedLap = true;
             checkPointTimeString = "-";
