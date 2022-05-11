@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ChildDisappear : MonoBehaviour
+public class ChildSlideController : MonoBehaviour
 {
     private Color originalColor;
     private Color transparentColor;

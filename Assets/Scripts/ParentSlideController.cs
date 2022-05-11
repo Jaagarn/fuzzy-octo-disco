@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ParentDisappear : MonoBehaviour
+public class ParentSlideController : MonoBehaviour
 {
     public bool isDisappearing = false;
     public float visibleTimeSeconds = 10.0f;
