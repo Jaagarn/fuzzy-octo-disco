@@ -2,10 +2,14 @@ using UnityEngine;
 
 public class ParentSlideController : MonoBehaviour
 {
-    public bool isDisappearing = false;
-    public float visibleTimeSeconds = 10.0f;
-    public float invisibleTimeSeconds = 4.0f;
-    public bool startAsInvisible = false;
+    [SerializeField]
+    private bool isDisappearing = false;
+    [SerializeField]
+    private float visibleTimeSeconds = 10.0f;
+    [SerializeField]
+    private float invisibleTimeSeconds = 4.0f;
+    [SerializeField]
+    private bool startAsInvisible = false;
     private float timer = 0.0f;
     private bool isVisible = false;
     private float timeToWait;
