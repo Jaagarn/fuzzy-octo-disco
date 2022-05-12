@@ -10,8 +10,8 @@ public class ChildSlideController : MonoBehaviour
     // Called by broadcasting from parent
     private void SetMaterial(Material[] materials)
     {
-        transparentMaterial = materials[0] == null ? (Material)Resources.Load("Materials/TransparentSlide") : materials[0];
-        opaqueMaterial = materials[1] == null ? (Material)Resources.Load("Materials/OpaqueSlide") : materials[1];
+        transparentMaterial = materials[0] == null ? (Material)Resources.Load("Materials/TransparentSlideMaterial") : materials[0];
+        opaqueMaterial = materials[1] == null ? (Material)Resources.Load("Materials/OpaqueSlideMaterial") : materials[1];
         originalColor = opaqueMaterial.color;
         transparentColor = transparentMaterial.color;
         transparentColor.a = 0f;
