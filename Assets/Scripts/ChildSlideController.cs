@@ -4,12 +4,16 @@ public class ChildSlideController : MonoBehaviour
 {
     private Color originalColor;
     private Color transparentColor;
+    private Material transparentMaterial;
+    private Material opaqueMaterial;
 
-    // Start is called before the first frame update
-    void Start()
+    // Called by broadcasting from parent
+    private void SetMaterial(Material[] materials)
     {
-        originalColor = gameObject.GetComponent<Renderer>().material.color;
-        transparentColor = originalColor;
+        transparentMaterial = materials[0] == null ? (Material)Resources.Load("Materials/TransparentSlide") : materials[0];
+        opaqueMaterial = materials[1] == null ? (Material)Resources.Load("Materials/OpaqueSlide") : materials[1];
+        originalColor = opaqueMaterial.color;
+        transparentColor = transparentMaterial.color;
         transparentColor.a = 0f;
     }
 
@@ -17,6 +21,7 @@ public class ChildSlideController : MonoBehaviour
     private void BecomeVisible()
     {
         GetComponent<BoxCollider>().enabled = true;
+        gameObject.GetComponent<Renderer>().material = opaqueMaterial;
         gameObject.GetComponent<Renderer>().material.color = originalColor;
     }
 
@@ -24,6 +29,7 @@ public class ChildSlideController : MonoBehaviour
     private void BecomeInvisible()
     {
         GetComponent<BoxCollider>().enabled = false;
+        gameObject.GetComponent<Renderer>().material = transparentMaterial;
         gameObject.GetComponent<Renderer>().material.color = transparentColor;
     }
 }
