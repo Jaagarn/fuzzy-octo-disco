@@ -3,6 +3,10 @@ using UnityEngine;
 public class ParentSlideController : MonoBehaviour
 {
     [SerializeField]
+    private Material transparentMaterialOverwrite;
+    [SerializeField]
+    private Material opaqueMaterialOverwrite;
+    [SerializeField]
     private bool isDisappearing = false;
     [SerializeField]
     private float visibleTimeSeconds = 10.0f;
@@ -17,22 +21,24 @@ public class ParentSlideController : MonoBehaviour
     // Broadcast to all children to become visible
     private void Start()
     {
-        if(!isDisappearing)
-        {
-            return;
-        }
+        transform.BroadcastMessage("SetMaterial", new Material[2] {transparentMaterialOverwrite, opaqueMaterialOverwrite});
 
-        transform.BroadcastMessage(startAsInvisible ? "BecomeInvisible" : "BecomeVisible");
-        timeToWait = startAsInvisible ? invisibleTimeSeconds : visibleTimeSeconds;
+        if(isDisappearing)
+        {
+            transform.BroadcastMessage(startAsInvisible ? "BecomeInvisible" : "BecomeVisible");
+            timeToWait = startAsInvisible ? invisibleTimeSeconds : visibleTimeSeconds;            
+        }
+        else
+        {
+            transform.BroadcastMessage("BecomeVisible");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         if(!isDisappearing)
-        {
             return;
-        }
 
         timer += Time.deltaTime;
 
@@ -57,6 +63,6 @@ public class ParentSlideController : MonoBehaviour
 
     // Parent needs to implement methods called by broadcast
     private void BecomeVisible(){}
-
     private void BecomeInvisible(){}
+    private void SetMaterial(){}
 }
