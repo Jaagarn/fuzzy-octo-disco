@@ -85,9 +85,9 @@ public class PlayerController : MonoBehaviour
     {
         if(!isBreaking && isGrounded && !(playerRb.velocity.magnitude >= maxSpeed))
         {
-            var verticallVector = mainCamera.transform.forward * verticalInput * speed * speedModifier;
-            verticallVector.y = 0;
-
+            // Create new vector3 from camera vector3 without rotation
+            Vector3 moveDirectionVector = new Vector3(mainCamera.transform.forward.x, 0, mainCamera.transform.forward.z);
+            Vector3 verticallVector = moveDirectionVector * verticalInput * speed * speedModifier;
             playerRb.AddForce(verticallVector);
         }
     }
