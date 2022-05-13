@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private float verticalInput;
     private bool isBreaking = false;
     private bool isGrounded = true;
+    private float speedModifier = 1.0f;
 
     // Make event. Lazy
     // This is truly terrible
@@ -67,11 +68,16 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
+        // Fetch parent of colliding gameObject to fetch data from parentSlideController
+        GameObject collidingObjectParent = collision.gameObject.transform.parent.gameObject;
+        if(collidingObjectParent.tag.Equals("Slide"))
+            speedModifier = collidingObjectParent.GetComponent<ParentSlideController>().speedModifier;
         isGrounded = true;
     }
 
     private void OnCollisionExit(Collision collision)
     {
+        speedModifier = 1.0f;
         isGrounded = false;
     }
 
@@ -79,7 +85,7 @@ public class PlayerController : MonoBehaviour
     {
         if(!isBreaking && isGrounded && !(playerRb.velocity.magnitude >= maxSpeed))
         {
-            var verticallVector = mainCamera.transform.forward * verticalInput * speed;
+            var verticallVector = mainCamera.transform.forward * verticalInput * speed * speedModifier;
             verticallVector.y = 0;
 
             playerRb.AddForce(verticallVector);

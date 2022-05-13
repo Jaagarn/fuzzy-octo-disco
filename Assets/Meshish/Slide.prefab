@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7389337017734332590}
   m_Layer: 0
   m_Name: Slide
-  m_TagString: Untagged
+  m_TagString: Slide
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transparentMaterialOverwrite: {fileID: 0}
   opaqueMaterialOverwrite: {fileID: 0}
+  displayRails: 1
   isDisappearing: 1
   visibleTimeSeconds: 10
   invisibleTimeSeconds: 4

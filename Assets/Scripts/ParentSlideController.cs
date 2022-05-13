@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class ParentSlideController : MonoBehaviour
 {
+    public enum SlideType {Default, Booster}
+    [HideInInspector]
+    public float speedModifier = 1.0f;
     [SerializeField]
-    private Material transparentMaterialOverwrite;
-    [SerializeField]
-    private Material opaqueMaterialOverwrite;
+    private SlideType slideType = SlideType.Default;
     [SerializeField]
     private bool displayRails = true;
     [SerializeField]
@@ -16,6 +17,8 @@ public class ParentSlideController : MonoBehaviour
     private float invisibleTimeSeconds = 4.0f;
     [SerializeField]
     private bool startAsInvisible = false;
+    private Material transparentMaterialOverwrite;
+    private Material opaqueMaterialOverwrite;
     private float timer = 0.0f;
     private bool isVisible = false;
     private float timeToWait;
@@ -23,7 +26,20 @@ public class ParentSlideController : MonoBehaviour
     // Broadcast to all children to become visible
     private void Start()
     {
-        transform.BroadcastMessage("SetMaterial", new Material[2] {transparentMaterialOverwrite, opaqueMaterialOverwrite});
+
+        switch (slideType)
+        {
+            case SlideType.Booster:
+                speedModifier = 2.0f;
+                transparentMaterialOverwrite = (Material)Resources.Load("Materials/TransparentBoosterMaterial");
+                opaqueMaterialOverwrite = (Material)Resources.Load("Materials/OpaqueBoosterMaterial");
+                break;
+            default:
+                speedModifier = 1.0f;
+                break;
+        }
+        
+        BroadcastMaterialSelection(transparentMaterialOverwrite, opaqueMaterialOverwrite);
         transform.BroadcastMessage("DisplayRails", displayRails);
 
         if(isDisappearing)
@@ -62,6 +78,11 @@ public class ParentSlideController : MonoBehaviour
                 timeToWait = visibleTimeSeconds;
            }
         }
+    }
+
+    private void BroadcastMaterialSelection(Material transparentMaterial, Material opaqueMaterial)
+    {
+        transform.BroadcastMessage("SetMaterial", new Material[2] {transparentMaterial, opaqueMaterial});
     }
 
     // Parent needs to implement methods called by broadcast
