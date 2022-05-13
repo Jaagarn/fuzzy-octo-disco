@@ -7,6 +7,8 @@ public class ParentSlideController : MonoBehaviour
     [SerializeField]
     private Material opaqueMaterialOverwrite;
     [SerializeField]
+    private bool displayRails = true;
+    [SerializeField]
     private bool isDisappearing = false;
     [SerializeField]
     private float visibleTimeSeconds = 10.0f;
@@ -22,6 +24,7 @@ public class ParentSlideController : MonoBehaviour
     private void Start()
     {
         transform.BroadcastMessage("SetMaterial", new Material[2] {transparentMaterialOverwrite, opaqueMaterialOverwrite});
+        transform.BroadcastMessage("DisplayRails", displayRails);
 
         if(isDisappearing)
         {
@@ -64,5 +67,6 @@ public class ParentSlideController : MonoBehaviour
     // Parent needs to implement methods called by broadcast
     private void BecomeVisible(){}
     private void BecomeInvisible(){}
-    private void SetMaterial(){}
+    private void SetMaterial(Material[] materials){}
+    private void DisplayRails(bool displayRails){}
 }

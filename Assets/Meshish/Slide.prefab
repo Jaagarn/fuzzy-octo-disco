@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0de7813b0d76aec4fa59e09d124801a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transparentMaterialOverwrite: {fileID: 0}
+  opaqueMaterialOverwrite: {fileID: 0}
   isDisappearing: 1
   visibleTimeSeconds: 10
   invisibleTimeSeconds: 4
@@ -64,7 +66,7 @@ GameObject:
   - component: {fileID: 5362437928312330430}
   - component: {fileID: 4846590249068965588}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: Rail+Z
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,7 +174,7 @@ GameObject:
   - component: {fileID: 8431612969142854451}
   - component: {fileID: 8748003408296470461}
   m_Layer: 0
-  m_Name: Cube (3)
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -280,7 +282,7 @@ GameObject:
   - component: {fileID: 4349098849084827209}
   - component: {fileID: 8298560987130069035}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Rail-Z
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

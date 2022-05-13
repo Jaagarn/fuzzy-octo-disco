@@ -8,6 +8,12 @@ public class ChildSlideController : MonoBehaviour
     private Material opaqueMaterial;
 
     // Called by broadcasting from parent
+    private void DisplayRails(bool displayRails){
+        if(gameObject.name.Contains("Rail") && !displayRails)
+            gameObject.SetActive(false);
+    }
+
+    // Called by broadcasting from parent
     private void SetMaterial(Material[] materials)
     {
         transparentMaterial = materials[0] == null ? (Material)Resources.Load("Materials/TransparentSlideMaterial") : materials[0];
