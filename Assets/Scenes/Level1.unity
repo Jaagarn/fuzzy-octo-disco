@@ -1174,8 +1174,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0de7813b0d76aec4fa59e09d124801a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transparentMaterialOverwrite: {fileID: 0}
-  opaqueMaterialOverwrite: {fileID: 0}
+  speedModifier: 1
+  slideType: 0
+  displayRails: 1
   isDisappearing: 0
   visibleTimeSeconds: 10
   invisibleTimeSeconds: 4
