@@ -25,12 +25,13 @@ public class LapTimer : MonoBehaviour
         lapTimerText = GameObject.FindGameObjectWithTag("LapTimerText");
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (hasStartedLap)
-        {
+        if(PlayerController.inMainHub)
+            return;
+
+        if(hasStartedLap)
             elapsedTime = Time.time - startTime;
-        }
 
         lapTimerText.GetComponent<Text>().text = $"Current lap time: {FormatTime(elapsedTime)}\nCheckpoint time: {checkPointTimeString}\n\nBest lap time: {bestTimeString}\nBest checkpoint time: {bestCheckPointTimeString}";
     }
@@ -45,6 +46,9 @@ public class LapTimer : MonoBehaviour
             checkPointTimeString = "-";
             PlayerController.resetTimer = false;
         }
+
+        if(PlayerController.inMainHub)
+            lapTimerText.GetComponent<Text>().text = string.Empty;
     }
 
     public string FormatTime(float time)

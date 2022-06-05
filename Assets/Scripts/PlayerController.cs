@@ -1,12 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private IEnumerable<KeyValuePair<string, Vector3>> playerPostitionTeleports = new Dictionary<string, Vector3>()
+    {
+        { "MainHub", new Vector3( 125, 9, -3 ) },
+        { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) }
+    };
     private const float speed = 10.0f;
     private const float maxSpeed = 160.0f;
     private Rigidbody playerRb;
     private GameObject mainCamera;
-    private Vector3 startingPlayerPosition;
+    private Vector3 currentPlayerResetPosition;
     private float verticalInput;
     private bool isBreaking = false;
     private bool isGrounded = true;
@@ -16,12 +24,16 @@ public class PlayerController : MonoBehaviour
     // This is truly terrible
     public static bool resetCamera = false;
     public static bool resetTimer = false;
+    public static bool inMainHub = false;
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
-        startingPlayerPosition = playerRb.position;
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        var postition = GetVector3FromString("MainHub");
+        playerRb.position = postition;
+        currentPlayerResetPosition = postition;
+        inMainHub = true;
     }
 
     void Update()
@@ -33,7 +45,7 @@ public class PlayerController : MonoBehaviour
             playerRb.angularDrag = 15.0f;
             isBreaking = true;
         }
-            
+
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             playerRb.angularDrag = 0.05f;
@@ -48,29 +60,44 @@ public class PlayerController : MonoBehaviour
 
         if (playerRb.position.y <= -4.0f || Input.GetKeyDown(KeyCode.R))
         {
-            playerRb.position = startingPlayerPosition;
-            playerRb.velocity = Vector3.zero;
-            resetCamera = true;
-            resetTimer = true;
+            playerRb.position = currentPlayerResetPosition;
+            ResetPlayer();
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("FourthCamera"))
+        if (other.CompareTag("FourthCamera"))
         {
             playerRb.position = new Vector3(28f, 5f, 2.6f);
-            playerRb.velocity = Vector3.zero;
-            resetCamera = true;
-            resetTimer = true;
+            ResetPlayer();
         }
+
+        if (other.CompareTag("MainHubTeleport"))
+        {
+            var vector3NewPosition = GetVector3FromString("MainHub");
+            playerRb.position = vector3NewPosition;
+            currentPlayerResetPosition = vector3NewPosition;
+            ResetPlayer();
+            inMainHub = true;
+        }
+
+        if (other.CompareTag("FirstTrackTeleport"))
+        {
+            var vector3NewPosition = GetVector3FromString("FirstTrack");
+            playerRb.position = vector3NewPosition;
+            currentPlayerResetPosition = vector3NewPosition;
+            ResetPlayer();
+            inMainHub = false;
+        }
+
     }
 
     private void OnCollisionStay(Collision collision)
     {
         // Fetch parent of colliding gameObject to fetch data from parentSlideController
         GameObject collidingObjectParent = collision.gameObject.transform.parent.gameObject;
-        if(collidingObjectParent.tag.Equals("Slide"))
+        if (collidingObjectParent.tag.Equals("Slide"))
             speedModifier = collidingObjectParent.GetComponent<ParentSlideController>().speedModifier;
         isGrounded = true;
     }
@@ -83,7 +110,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!isBreaking && isGrounded && !(playerRb.velocity.magnitude >= maxSpeed))
+        if (!isBreaking && isGrounded && !(playerRb.velocity.magnitude >= maxSpeed))
         {
             // Create new vector3 from camera vector3 without rotation
             Vector3 moveDirectionVector = new Vector3(mainCamera.transform.forward.x, 0, mainCamera.transform.forward.z);
@@ -91,4 +118,19 @@ public class PlayerController : MonoBehaviour
             playerRb.AddForce(verticallVector);
         }
     }
+
+    private void ResetPlayer()
+    {
+        playerRb.velocity = Vector3.zero;
+        resetCamera = true;
+        resetTimer = true;
+    }
+
+    private Vector3 GetVector3FromString(string teleport)
+    {
+        return playerPostitionTeleports.Where(p => p.Key.Equals(teleport))
+                                       .Select(p => p.Value)
+                                       .FirstOrDefault();
+    }
+
 }
