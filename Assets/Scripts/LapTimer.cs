@@ -20,9 +20,18 @@ public class LapTimer : MonoBehaviour
     private bool hasPassedCheckPoint = false;
     private GameObject lapTimerText;
 
+    private Image backgroundImage;
+    private Color backgroundImageNormal;
+    private Color backgroundImageInvisible;
+
     private void Start()
     {
         lapTimerText = GameObject.FindGameObjectWithTag("LapTimerText");
+        backgroundImage = lapTimerText.GetComponentInChildren<Image>();
+        var tempColor = backgroundImage.color;
+        backgroundImageNormal = tempColor;
+        tempColor.a = 0f;
+        backgroundImageInvisible = tempColor;
     }
 
     private void Update()
@@ -33,7 +42,17 @@ public class LapTimer : MonoBehaviour
         if(hasStartedLap)
             elapsedTime = Time.time - startTime;
 
-        lapTimerText.GetComponent<Text>().text = $"Current lap time: {FormatTime(elapsedTime)}\nCheckpoint time: {checkPointTimeString}\n\nBest lap time: {bestTimeString}\nBest checkpoint time: {bestCheckPointTimeString}";
+        backgroundImage.color = backgroundImageNormal;
+
+        lapTimerText.GetComponent<Text>().text = 
+            $"Current lap time: " +
+            $"{FormatTime(elapsedTime)}\n" +
+            $"Checkpoint time: " +
+            $"{checkPointTimeString}\n\n" +
+            $"Best lap time: " +
+            $"{bestTimeString}\n" +
+            $"Best checkpoint time: " +
+            $"{bestCheckPointTimeString}";
     }
 
     private void LateUpdate()
@@ -48,7 +67,10 @@ public class LapTimer : MonoBehaviour
         }
 
         if(PlayerController.inMainHub)
+        {
             lapTimerText.GetComponent<Text>().text = string.Empty;
+            backgroundImage.color = backgroundImageInvisible;
+        }
     }
 
     public string FormatTime(float time)

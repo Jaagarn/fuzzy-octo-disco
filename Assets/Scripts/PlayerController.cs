@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded = true;
     private float speedModifier = 1.0f;
 
+    [SerializeField]
+    private Animator teleportUIAnimator; 
+
     // Make event. Lazy
     // This is truly terrible
     public static bool resetCamera = false;
@@ -74,22 +77,10 @@ public class PlayerController : MonoBehaviour
         }
 
         if (other.CompareTag("MainHubTeleport"))
-        {
-            var vector3NewPosition = GetVector3FromString("MainHub");
-            playerRb.position = vector3NewPosition;
-            currentPlayerResetPosition = vector3NewPosition;
-            ResetPlayer();
-            inMainHub = true;
-        }
+            FadeUI("MainHub");
 
         if (other.CompareTag("FirstTrackTeleport"))
-        {
-            var vector3NewPosition = GetVector3FromString("FirstTrack");
-            playerRb.position = vector3NewPosition;
-            currentPlayerResetPosition = vector3NewPosition;
-            ResetPlayer();
-            inMainHub = false;
-        }
+            FadeUI("FirstTrack");
 
     }
 
@@ -133,4 +124,23 @@ public class PlayerController : MonoBehaviour
                                        .FirstOrDefault();
     }
 
+    private void FadeUI(string teleportTo)
+    {
+        StartCoroutine(DoFadeUI(teleportTo));
+    }
+
+    private IEnumerator DoFadeUI(string teleportTo)
+    {
+        teleportUIAnimator.SetTrigger("StartTeleport");
+
+        yield return new WaitForSeconds(1);
+
+        var vector3NewPosition = GetVector3FromString(teleportTo);
+        playerRb.position = vector3NewPosition;
+        currentPlayerResetPosition = vector3NewPosition;
+        ResetPlayer();
+        inMainHub = !inMainHub;
+
+        teleportUIAnimator.SetTrigger("FinishTeleport");
+    }
 }
