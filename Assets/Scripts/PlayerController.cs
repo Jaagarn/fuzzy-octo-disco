@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     private IEnumerable<KeyValuePair<string, Vector3>> playerPostitionTeleports = new Dictionary<string, Vector3>()
     {
-        { "MainHub", new Vector3( 125, 9, -3 ) },
+        { "MainHub", new Vector3( 124, 8, -14 ) },
         { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) }
     };
     private const float speed = 10.0f;
