@@ -5171,6 +5171,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 271927422}
     m_Modifications:
+    - target: {fileID: 3161949719312520951, guid: 2844f2158bcf17144aa869ca46e3c3a3, type: 3}
+      propertyPath: m_TagString
+      value: FirstTrackSecret
+      objectReference: {fileID: 0}
     - target: {fileID: 3161949719330794273, guid: 2844f2158bcf17144aa869ca46e3c3a3, type: 3}
       propertyPath: m_RootOrder
       value: 3

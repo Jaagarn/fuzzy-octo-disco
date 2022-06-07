@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
     private IEnumerable<KeyValuePair<string, Vector3>> playerPostitionTeleports = new Dictionary<string, Vector3>()
     {
         { "MainHub", new Vector3( 124, 8, -14 ) },
-        { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) }
+        { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) },
+        { "FirstTrackSecret", new Vector3( 28f, 5f, 2.6f ) }
     };
     private const float speed = 10.0f;
     private const float maxSpeed = 160.0f;
@@ -70,18 +71,23 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("FourthCamera"))
-        {
-            playerRb.position = new Vector3(28f, 5f, 2.6f);
-            ResetPlayer();
-        }
-
         if (other.CompareTag("MainHubTeleport"))
-            FadeUI("MainHub");
+            FadeUI(
+                teleportTo: "MainHub",
+                newResetPostition: true, 
+                enteringMainHub: true);
 
         if (other.CompareTag("FirstTrackTeleport"))
-            FadeUI("FirstTrack");
+            FadeUI(
+                teleportTo: "FirstTrack",
+                newResetPostition: true,
+                enteringMainHub: false);
 
+        if (other.CompareTag("FirstTrackSecret"))
+            FadeUI(
+                teleportTo: "FirstTrackSecret",
+                newResetPostition: false,
+                enteringMainHub: false);
     }
 
     private void OnCollisionStay(Collision collision)
@@ -124,12 +130,15 @@ public class PlayerController : MonoBehaviour
                                        .FirstOrDefault();
     }
 
-    private void FadeUI(string teleportTo)
+    private void FadeUI(
+        string teleportTo, 
+        bool newResetPostition = false,
+        bool enteringMainHub = false)
     {
-        StartCoroutine(DoFadeUI(teleportTo));
+        StartCoroutine(DoFadeUI(teleportTo, newResetPostition, enteringMainHub));
     }
 
-    private IEnumerator DoFadeUI(string teleportTo)
+    private IEnumerator DoFadeUI(string teleportTo, bool newResetPostition, bool enteringMainHub)
     {
         teleportUIAnimator.SetTrigger("StartTeleport");
 
@@ -137,9 +146,11 @@ public class PlayerController : MonoBehaviour
 
         var vector3NewPosition = GetVector3FromString(teleportTo);
         playerRb.position = vector3NewPosition;
-        currentPlayerResetPosition = vector3NewPosition;
         ResetPlayer();
-        inMainHub = !inMainHub;
+        inMainHub = enteringMainHub;
+
+        if (newResetPostition)
+            currentPlayerResetPosition = vector3NewPosition;
 
         teleportUIAnimator.SetTrigger("FinishTeleport");
     }

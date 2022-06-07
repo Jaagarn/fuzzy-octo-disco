@@ -19,6 +19,7 @@ TagManager:
   - MainHubTeleport
   - FirstTrackTeleport
   - UITeleportCover
+  - FirstTrackSecret
   layers:
   - Default
   - TransparentFX
