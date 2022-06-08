@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private IEnumerable<KeyValuePair<string, Vector3>> playerPostitionTeleports = new Dictionary<string, Vector3>()
+    private readonly IEnumerable<KeyValuePair<string, Vector3>> playerPostitionTeleports = new Dictionary<string, Vector3>()
     {
         { "MainHub", new Vector3( 124, 8, -14 ) },
         { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) },
         { "FirstTrackSecret", new Vector3( 28f, 5f, 2.6f ) }
     };
+
     private const float speed = 10.0f;
     private const float maxSpeed = 160.0f;
     private Rigidbody playerRb;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private float verticalInput;
     private bool isBreaking = false;
     private bool isGrounded = true;
+    private bool disableControls = false;
     private float speedModifier = 1.0f;
 
     [SerializeField]
@@ -42,6 +44,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (disableControls)
+            return;
+
         verticalInput = Input.GetAxis("Vertical");
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded)
@@ -64,27 +69,26 @@ public class PlayerController : MonoBehaviour
 
         if (playerRb.position.y <= -4.0f || Input.GetKeyDown(KeyCode.R))
         {
-            playerRb.position = currentPlayerResetPosition;
-            ResetPlayer();
+            FadeUIReset();
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("MainHubTeleport"))
-            FadeUI(
+            FadeUITeleport(
                 teleportTo: "MainHub",
                 newResetPostition: true, 
                 enteringMainHub: true);
 
         if (other.CompareTag("FirstTrackTeleport"))
-            FadeUI(
+            FadeUITeleport(
                 teleportTo: "FirstTrack",
                 newResetPostition: true,
                 enteringMainHub: false);
 
         if (other.CompareTag("FirstTrackSecret"))
-            FadeUI(
+            FadeUITeleport(
                 teleportTo: "FirstTrackSecret",
                 newResetPostition: false,
                 enteringMainHub: false);
@@ -130,19 +134,25 @@ public class PlayerController : MonoBehaviour
                                        .FirstOrDefault();
     }
 
-    private void FadeUI(
+    private void FadeUITeleport(
         string teleportTo, 
         bool newResetPostition = false,
         bool enteringMainHub = false)
     {
-        StartCoroutine(DoFadeUI(teleportTo, newResetPostition, enteringMainHub));
+        StartCoroutine(DoFadeUITeleport(teleportTo, newResetPostition, enteringMainHub));
     }
 
-    private IEnumerator DoFadeUI(string teleportTo, bool newResetPostition, bool enteringMainHub)
+    private void FadeUIReset()
     {
+        StartCoroutine(DoFadeUIReset());
+    }
+
+    private IEnumerator DoFadeUITeleport(string teleportTo, bool newResetPostition, bool enteringMainHub)
+    {
+        disableControls = true;
         teleportUIAnimator.SetTrigger("StartTeleport");
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
 
         var vector3NewPosition = GetVector3FromString(teleportTo);
         playerRb.position = vector3NewPosition;
@@ -153,5 +163,26 @@ public class PlayerController : MonoBehaviour
             currentPlayerResetPosition = vector3NewPosition;
 
         teleportUIAnimator.SetTrigger("FinishTeleport");
+
+        yield return new WaitForSeconds(0.5f);
+
+        disableControls = false;
+    }
+
+    private IEnumerator DoFadeUIReset()
+    {
+        disableControls = true;
+        teleportUIAnimator.SetTrigger("StartTeleport");
+
+        yield return new WaitForSeconds(0.5f);
+
+        playerRb.position = currentPlayerResetPosition;
+        ResetPlayer();
+
+        teleportUIAnimator.SetTrigger("FinishTeleport");
+
+        yield return new WaitForSeconds(0.5f);
+
+        disableControls = false;
     }
 }
