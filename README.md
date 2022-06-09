@@ -1,2 +1,4 @@
 # fuzzy-octo-disco
-Prototype 3 of my unity journey
+Rollers the game 
+by
+Keso and Jaagarn
