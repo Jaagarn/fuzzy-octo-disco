@@ -5,23 +5,29 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private IEnumerable<KeyValuePair<string, Vector3>> playerPostitionTeleports = new Dictionary<string, Vector3>()
-    {
-        { "MainHub", new Vector3( 124, 8, -14 ) },
-        { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) }
-    };
+
+    [SerializeField]
+    private Animator teleportUIAnimator;
+
     private const float speed = 10.0f;
     private const float maxSpeed = 160.0f;
+    private float speedModifier = 1.0f;
+    private float verticalInput;
+
     private Rigidbody playerRb;
     private GameObject mainCamera;
     private Vector3 currentPlayerResetPosition;
-    private float verticalInput;
+    
     private bool isBreaking = false;
+    private bool isControlsDisabled = false;
     private bool isGrounded = true;
-    private float speedModifier = 1.0f;
 
-    [SerializeField]
-    private Animator teleportUIAnimator; 
+    private readonly IEnumerable<KeyValuePair<string, Vector3>> playerPostitionTeleports = new Dictionary<string, Vector3>()
+    {
+        { "MainHub", new Vector3( 124, 8, -14 ) },
+        { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) },
+        { "FirstTrackSecret", new Vector3( 28f, 5f, 2.6f ) }
+    };
 
     // Make event. Lazy
     // This is truly terrible
@@ -41,6 +47,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (isControlsDisabled)
+            return;
+
         verticalInput = Input.GetAxis("Vertical");
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded)
@@ -62,26 +71,25 @@ public class PlayerController : MonoBehaviour
         }
 
         if (playerRb.position.y <= -4.0f || Input.GetKeyDown(KeyCode.R))
-        {
-            playerRb.position = currentPlayerResetPosition;
-            ResetPlayer();
-        }
+            FadeUIReset();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("FourthCamera"))
-        {
-            playerRb.position = new Vector3(28f, 5f, 2.6f);
-            ResetPlayer();
-        }
-
         if (other.CompareTag("MainHubTeleport"))
-            FadeUI("MainHub");
+            FadeUITeleport(
+                teleportTo: "MainHub",
+                newResetPostition: true);
 
         if (other.CompareTag("FirstTrackTeleport"))
-            FadeUI("FirstTrack");
+            FadeUITeleport(
+                teleportTo: "FirstTrack",
+                newResetPostition: true);
 
+        if (other.CompareTag("FirstTrackSecret"))
+            FadeUITeleport(
+                teleportTo: "FirstTrackSecret",
+                newResetPostition: false);
     }
 
     private void OnCollisionStay(Collision collision)
@@ -124,23 +132,54 @@ public class PlayerController : MonoBehaviour
                                        .FirstOrDefault();
     }
 
-    private void FadeUI(string teleportTo)
+    private void FadeUITeleport(
+        string teleportTo, 
+        bool newResetPostition = false)
     {
-        StartCoroutine(DoFadeUI(teleportTo));
+        StartCoroutine(DoFadeUITeleport(teleportTo, newResetPostition));
     }
 
-    private IEnumerator DoFadeUI(string teleportTo)
+    private void FadeUIReset()
     {
+        StartCoroutine(DoFadeUIReset());
+    }
+
+    private IEnumerator DoFadeUITeleport(string teleportTo, bool newResetPostition)
+    {
+        isControlsDisabled = true;
         teleportUIAnimator.SetTrigger("StartTeleport");
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
 
         var vector3NewPosition = GetVector3FromString(teleportTo);
         playerRb.position = vector3NewPosition;
-        currentPlayerResetPosition = vector3NewPosition;
         ResetPlayer();
-        inMainHub = !inMainHub;
+        inMainHub = string.Equals(teleportTo, "MainHub");
+
+        if (newResetPostition)
+            currentPlayerResetPosition = vector3NewPosition;
 
         teleportUIAnimator.SetTrigger("FinishTeleport");
+
+        yield return new WaitForSeconds(0.5f);
+
+        isControlsDisabled = false;
+    }
+
+    private IEnumerator DoFadeUIReset()
+    {
+        isControlsDisabled = true;
+        teleportUIAnimator.SetTrigger("StartTeleport");
+
+        yield return new WaitForSeconds(0.5f);
+
+        playerRb.position = currentPlayerResetPosition;
+        ResetPlayer();
+
+        teleportUIAnimator.SetTrigger("FinishTeleport");
+
+        yield return new WaitForSeconds(0.5f);
+
+        isControlsDisabled = false;
     }
 }
