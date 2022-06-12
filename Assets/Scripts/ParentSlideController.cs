@@ -26,6 +26,7 @@ public class ParentSlideController : MonoBehaviour
     // Broadcast to all children to become visible
     private void Start()
     {
+        isVisible = startAsInvisible;
 
         switch (slideType)
         {
@@ -44,8 +45,8 @@ public class ParentSlideController : MonoBehaviour
 
         if(isDisappearing)
         {
-            transform.BroadcastMessage(startAsInvisible ? "BecomeInvisible" : "BecomeVisible");
-            timeToWait = startAsInvisible ? invisibleTimeSeconds : visibleTimeSeconds;            
+            transform.BroadcastMessage(isVisible ? "BecomeInvisible" : "BecomeVisible");
+            timeToWait = isVisible ? invisibleTimeSeconds : visibleTimeSeconds;            
         }
         else
         {
