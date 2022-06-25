@@ -26,7 +26,8 @@ public class PlayerController : MonoBehaviour
     {
         { "MainHub", new Vector3( 124, 8, -14 ) },
         { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) },
-        { "FirstTrackSecret", new Vector3( 28f, 5f, 2.6f ) }
+        { "FirstTrackSecret", new Vector3( 28f, 5f, 2.6f ) },
+        { "ThirdTrack", new Vector3( 198.67f, 5.9f, 96.27f ) }
     };
 
     // Make event. Lazy
@@ -52,13 +53,13 @@ public class PlayerController : MonoBehaviour
 
         verticalInput = Input.GetAxis("Vertical");
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded)
+        if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && isGrounded)
         {
-            playerRb.angularDrag = 15.0f;
+            playerRb.angularDrag = 20.0f;
             isBreaking = true;
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if ((Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)))
         {
             playerRb.angularDrag = 0.05f;
             isBreaking = false;
@@ -90,6 +91,11 @@ public class PlayerController : MonoBehaviour
             FadeUITeleport(
                 teleportTo: "FirstTrackSecret",
                 newResetPostition: false);
+
+        if (other.CompareTag("ThirdTrackTeleport"))
+            FadeUITeleport(
+                teleportTo: "ThirdTrack",
+                newResetPostition: true);
     }
 
     private void OnCollisionStay(Collision collision)
