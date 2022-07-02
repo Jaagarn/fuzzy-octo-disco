@@ -4,10 +4,6 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - FirstCamera
-  - SecondCamera
-  - ThirdCamera
-  - FourthCamera
   - CameraHolder
   - StartLine
   - FinishLine
@@ -21,6 +17,17 @@ TagManager:
   - UITeleportCover
   - FirstTrackSecret
   - ThirdTrackTeleport
+  - UIFadeToBlack
+  - LapTimerTextWrapper
+  - LapTimerCheckPointText
+  - BestTimeWrapper
+  - BestLapTimeGreenText
+  - BestCheckPointTimeGreenText
+  - BestLapTimeYellowText
+  - BestCheckPointTimeYellowText
+  - LapTimerWrapper
+  - BestGreenWrapper
+  - BestYellowWrapper
   layers:
   - Default
   - TransparentFX
@@ -28,7 +35,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Menu
   - 
   - 
   - 
