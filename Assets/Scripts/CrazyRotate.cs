@@ -4,7 +4,7 @@ public class CrazyRotate : MonoBehaviour
 {
     private const float rotationSpeed = 20.0f;
 
-    void Update()
+    private void Update()
     {
         transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime, rotationSpeed * Time.deltaTime));
     }

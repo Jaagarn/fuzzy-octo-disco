@@ -38,13 +38,13 @@ public class LapTimer : MonoBehaviour
     private GameObject bestLapTimeYellowText;
 
 
-    void OnEnable()
+    private void OnEnable()
     {
         StateAndLocatizationEventManager.OnReset += ResetEventHandler;
         StateAndLocatizationEventManager.OnLocationChange += LocationChangedEventHandler;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         StateAndLocatizationEventManager.OnReset -= ResetEventHandler;
         StateAndLocatizationEventManager.OnLocationChange -= LocationChangedEventHandler;

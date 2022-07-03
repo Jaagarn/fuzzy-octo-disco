@@ -8,13 +8,13 @@ public class RandomCube : MonoBehaviour
     float randomYAngle;
     float randomZAngle;
 
-    void Start()
+    private void Start()
     {
         newCube();
         Invoke("ResetCooldown", 3f);
     }
 
-    void Update()
+    private void Update()
     {
 
         transform.Rotate(randomXAngle * Time.deltaTime, randomYAngle * Time.deltaTime, randomZAngle * Time.deltaTime, Space.Self);
@@ -27,7 +27,7 @@ public class RandomCube : MonoBehaviour
         }
     }
 
-    void newCube()
+    private void newCube()
     {
         int randomX = Random.Range(20, 30);
         int randomY = Random.Range(0, 5);
@@ -54,7 +54,7 @@ public class RandomCube : MonoBehaviour
 
     }
 
-    void ResetCooldown()
+    private void ResetCooldown()
     {
         cooldown = false;
     }

@@ -40,20 +40,20 @@ public class PlayerController : MonoBehaviour
         { PlayerTeleportLocation.ThirdTrack, new Vector3( 198.67f, 5.9f, 96.27f ) }
     };
 
-    void OnEnable()
+    private void OnEnable()
     {
         StateAndLocatizationEventManager.OnGamePaused += GamePausedHandler;
         StateAndLocatizationEventManager.OnGameResumed += GameResumedHandler;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
 
         StateAndLocatizationEventManager.OnGamePaused += GamePausedHandler;
         StateAndLocatizationEventManager.OnGameResumed += GameResumedHandler;
     }
 
-    void Start()
+    private void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         currentPlayerResetLocation = PlayerTeleportLocation.MainHub;
     }
 
-    void Update()
+    private void Update()
     {
         if (isControlsDisabled || gameIsPaused)
             return;

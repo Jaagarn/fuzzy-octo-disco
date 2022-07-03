@@ -6,17 +6,17 @@ public class CameraController : MonoBehaviour
     private Quaternion originalAngle;
     private const int invertRoatationSpeed = -90;
 
-    void OnEnable()
+    private void OnEnable()
     {
         StateAndLocatizationEventManager.OnReset += ResetEventHandler;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         StateAndLocatizationEventManager.OnReset -= ResetEventHandler;
     }
 
-    void Start()
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         originalAngle = transform.rotation;
@@ -32,7 +32,7 @@ public class CameraController : MonoBehaviour
 
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         transform.position = player.transform.position;
     }
