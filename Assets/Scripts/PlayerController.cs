@@ -184,11 +184,13 @@ public class PlayerController : MonoBehaviour
         playerRb.position = teleportLocationVector3;
         playerRb.velocity = Vector3.zero;
 
-        StateAndLocatizationEventManager.RaiseOnLocationChange(teleportLocation);
         StateAndLocatizationEventManager.RaiseOnReset();
 
         if (newResetPostition)
+        {
             currentPlayerResetLocation = teleportLocation;
+            StateAndLocatizationEventManager.RaiseOnLocationChange(teleportLocation);
+        }
 
         teleportUIAnimator.SetTrigger("FinishTeleport");
 
