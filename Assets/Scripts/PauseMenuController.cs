@@ -9,7 +9,7 @@ public class PauseMenuController : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (gameIsPaused)
                 Resume();
@@ -18,12 +18,29 @@ public class PauseMenuController : MonoBehaviour
         }
     }
 
-    private void Pause()
+
+
+    public void OnResumeButtonClick()
     {
-        pauseMenuUI.SetActive(true);
-        gameIsPaused = true;
-        StateAndLocatizationEventManager.RaiseOnGamePaused();
-        Time.timeScale = 0;
+        Resume();
+    }
+
+    public void OnMainManuButtonClick()
+    {
+        // TODO: Fix a main menu
+        Debug.Log("Main menu button pressed");
+    }
+
+    public void OnSettingsButtonClick()
+    {
+        // TODO: Fix Settings menu
+        Debug.Log("Settings button pressed");
+    }
+
+    public void OnExitButtonClick()
+    {
+        // Does not work in the editor, only on a compiled version
+        Application.Quit();
     }
 
     private void Resume()
@@ -32,5 +49,13 @@ public class PauseMenuController : MonoBehaviour
         gameIsPaused = false;
         StateAndLocatizationEventManager.RaiseOnGameResumed();
         Time.timeScale = 1;
+    }
+
+    private void Pause()
+    {
+        pauseMenuUI.SetActive(true);
+        gameIsPaused = true;
+        StateAndLocatizationEventManager.RaiseOnGamePaused();
+        Time.timeScale = 0;
     }
 }

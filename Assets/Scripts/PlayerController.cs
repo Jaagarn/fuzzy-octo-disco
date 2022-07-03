@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         { PlayerTeleportLocation.MainHub, new Vector3( 124, 8, -14 ) },
         { PlayerTeleportLocation.FirstTrack, new Vector3( -4.2f, 2.5f, 2 ) },
-        { PlayerTeleportLocation.FirstTrackSecret, new Vector3( 28f, 5f, 2.6f ) },
+        { PlayerTeleportLocation.FirstTrackSecret, new Vector3( 28f, 7f, 2.6f ) },
         { PlayerTeleportLocation.ThirdTrack, new Vector3( 198.67f, 5.9f, 96.27f ) }
     };
 
