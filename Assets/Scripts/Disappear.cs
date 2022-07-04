@@ -17,8 +17,7 @@ public class Disappear : MonoBehaviour
         transparentColor.a = 0f;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if(Time.time > nextVisibleTime)
         {

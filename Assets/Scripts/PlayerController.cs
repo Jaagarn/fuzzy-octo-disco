@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum PlayerTeleportLocation
+{
+    MainHub,
+    FirstTrack,
+    FirstTrackSecret,
+    ThirdTrack
+}
+
 public class PlayerController : MonoBehaviour
 {
 
@@ -16,39 +24,49 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody playerRb;
     private GameObject mainCamera;
-    private Vector3 currentPlayerResetPosition;
-    
+    private GameObject uiFadeToBlack;
+    private PlayerTeleportLocation currentPlayerResetLocation;
+
     private bool isBreaking = false;
     private bool isControlsDisabled = false;
     private bool isGrounded = true;
+    private bool gameIsPaused = false;
 
-    private readonly IEnumerable<KeyValuePair<string, Vector3>> playerPostitionTeleports = new Dictionary<string, Vector3>()
+    private readonly IEnumerable<KeyValuePair<PlayerTeleportLocation, Vector3>> playerPostitionTeleports = new Dictionary<PlayerTeleportLocation, Vector3>()
     {
-        { "MainHub", new Vector3( 124, 8, -14 ) },
-        { "FirstTrack", new Vector3( -4.2f, 2.5f, 2 ) },
-        { "FirstTrackSecret", new Vector3( 28f, 5f, 2.6f ) },
-        { "ThirdTrack", new Vector3( 198.67f, 5.9f, 96.27f ) }
+        { PlayerTeleportLocation.MainHub, new Vector3( 124, 8, -14 ) },
+        { PlayerTeleportLocation.FirstTrack, new Vector3( -4.2f, 2.5f, 2 ) },
+        { PlayerTeleportLocation.FirstTrackSecret, new Vector3( 28f, 7f, 2.6f ) },
+        { PlayerTeleportLocation.ThirdTrack, new Vector3( 198.67f, 5.9f, 96.27f ) }
     };
 
-    // Make event. Lazy
-    // This is truly terrible
-    public static bool resetCamera = false;
-    public static bool resetTimer = false;
-    public static bool inMainHub = false;
+    private void OnEnable()
+    {
+        StateAndLocatizationEventManager.OnGamePaused += GamePausedHandler;
+        StateAndLocatizationEventManager.OnGameResumed += GameResumedHandler;
+    }
 
-    void Start()
+    private void OnDisable()
+    {
+
+        StateAndLocatizationEventManager.OnGamePaused += GamePausedHandler;
+        StateAndLocatizationEventManager.OnGameResumed += GameResumedHandler;
+    }
+
+    private void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-        var postition = GetVector3FromString("MainHub");
+        uiFadeToBlack = GameObject.FindGameObjectWithTag("UIFadeToBlack");
+        uiFadeToBlack.SetActive(false);
+        var postition = GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation.MainHub);
         playerRb.position = postition;
-        currentPlayerResetPosition = postition;
-        inMainHub = true;
+        currentPlayerResetLocation = PlayerTeleportLocation.MainHub;
     }
 
-    void Update()
+    private void Update()
     {
-        if (isControlsDisabled)
+        if (isControlsDisabled || gameIsPaused)
             return;
 
         verticalInput = Input.GetAxis("Vertical");
@@ -59,7 +77,7 @@ public class PlayerController : MonoBehaviour
             isBreaking = true;
         }
 
-        if ((Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)))
+        if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
         {
             playerRb.angularDrag = 0.05f;
             isBreaking = false;
@@ -71,30 +89,33 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
 
-        if (playerRb.position.y <= -4.0f || Input.GetKeyDown(KeyCode.R))
-            FadeUIReset();
+        if (playerRb.transform.position.y <= -4.0f || Input.GetKeyDown(KeyCode.R))
+        {
+            FadeUITeleport(
+                teleportLocation: currentPlayerResetLocation);
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("MainHubTeleport"))
             FadeUITeleport(
-                teleportTo: "MainHub",
+                teleportLocation: PlayerTeleportLocation.MainHub,
                 newResetPostition: true);
 
         if (other.CompareTag("FirstTrackTeleport"))
             FadeUITeleport(
-                teleportTo: "FirstTrack",
+                teleportLocation: PlayerTeleportLocation.FirstTrack,
                 newResetPostition: true);
 
         if (other.CompareTag("FirstTrackSecret"))
             FadeUITeleport(
-                teleportTo: "FirstTrackSecret",
-                newResetPostition: false);
+                teleportLocation: PlayerTeleportLocation.FirstTrackSecret);
 
         if (other.CompareTag("ThirdTrackTeleport"))
             FadeUITeleport(
-                teleportTo: "ThirdTrack",
+                teleportLocation: PlayerTeleportLocation.ThirdTrack,
                 newResetPostition: true);
     }
 
@@ -124,68 +145,62 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ResetPlayer()
+    private Vector3 GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation teleportLocation)
     {
-        playerRb.velocity = Vector3.zero;
-        resetCamera = true;
-        resetTimer = true;
-    }
-
-    private Vector3 GetVector3FromString(string teleport)
-    {
-        return playerPostitionTeleports.Where(p => p.Key.Equals(teleport))
+        return playerPostitionTeleports.Where(p => p.Key.Equals(teleportLocation))
                                        .Select(p => p.Value)
                                        .FirstOrDefault();
     }
 
+    /// <summary>
+    /// A metod that teleports the player to a new location. Activates/deactivates the ui animation that handels fade to black
+    /// and runs it. 
+    /// </summary>
+    /// <param name="teleportTo">
+    /// Vector3 for the new position
+    /// </param>
+    /// <param name="teleportString">
+    /// Set teleportString if you want to set inMainHub bool. If you don't give it a value, isMainHub will be false.
+    /// </param>
+    /// <param name="newResetPostition">
+    /// If you want the teleportTo Vector3 to be the new resetPosition 
+    /// </param>
     private void FadeUITeleport(
-        string teleportTo, 
+        PlayerTeleportLocation teleportLocation,
         bool newResetPostition = false)
     {
-        StartCoroutine(DoFadeUITeleport(teleportTo, newResetPostition));
+        StartCoroutine(DoFadeUITeleport(teleportLocation, newResetPostition));
     }
 
-    private void FadeUIReset()
+    private IEnumerator DoFadeUITeleport(PlayerTeleportLocation teleportLocation, bool newResetPostition)
     {
-        StartCoroutine(DoFadeUIReset());
-    }
-
-    private IEnumerator DoFadeUITeleport(string teleportTo, bool newResetPostition)
-    {
+        var teleportLocationVector3 = GetVector3FromPlayerTeleportLocation(teleportLocation);
         isControlsDisabled = true;
+        uiFadeToBlack.SetActive(true);
         teleportUIAnimator.SetTrigger("StartTeleport");
 
         yield return new WaitForSeconds(0.5f);
 
-        var vector3NewPosition = GetVector3FromString(teleportTo);
-        playerRb.position = vector3NewPosition;
-        ResetPlayer();
-        inMainHub = string.Equals(teleportTo, "MainHub");
+        playerRb.position = teleportLocationVector3;
+        playerRb.velocity = Vector3.zero;
+
+        StateAndLocatizationEventManager.RaiseOnReset();
 
         if (newResetPostition)
-            currentPlayerResetPosition = vector3NewPosition;
+        {
+            currentPlayerResetLocation = teleportLocation;
+            StateAndLocatizationEventManager.RaiseOnLocationChange(teleportLocation);
+        }
 
         teleportUIAnimator.SetTrigger("FinishTeleport");
 
         yield return new WaitForSeconds(0.5f);
 
+        uiFadeToBlack.SetActive(false);
         isControlsDisabled = false;
     }
 
-    private IEnumerator DoFadeUIReset()
-    {
-        isControlsDisabled = true;
-        teleportUIAnimator.SetTrigger("StartTeleport");
+    private void GamePausedHandler() { gameIsPaused = true; }
+    private void GameResumedHandler() { gameIsPaused = false; }
 
-        yield return new WaitForSeconds(0.5f);
-
-        playerRb.position = currentPlayerResetPosition;
-        ResetPlayer();
-
-        teleportUIAnimator.SetTrigger("FinishTeleport");
-
-        yield return new WaitForSeconds(0.5f);
-
-        isControlsDisabled = false;
-    }
 }

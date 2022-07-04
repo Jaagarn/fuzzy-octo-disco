@@ -2,12 +2,21 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-
     private GameObject player;
     private Quaternion originalAngle;
     private const int invertRoatationSpeed = -90;
 
-    void Start()
+    private void OnEnable()
+    {
+        StateAndLocatizationEventManager.OnReset += ResetEventHandler;
+    }
+
+    private void OnDisable()
+    {
+        StateAndLocatizationEventManager.OnReset -= ResetEventHandler;
+    }
+
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         originalAngle = transform.rotation;
@@ -21,19 +30,16 @@ public class CameraController : MonoBehaviour
 
         transform.RotateAround(player.transform.position, Vector3.down, rotation);
 
-        if (Input.GetKey(KeyCode.Alpha1))
-            transform.SetPositionAndRotation(transform.position, originalAngle);
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         transform.position = player.transform.position;
-
-        // Make to an event. You lazy
-        if (PlayerController.resetCamera)
-        {
-            transform.SetPositionAndRotation(transform.position, originalAngle);
-            PlayerController.resetCamera = false;
-        }
     }
+
+    private void ResetEventHandler()
+    {
+        transform.SetPositionAndRotation(transform.position, originalAngle);
+    }
+
 }
