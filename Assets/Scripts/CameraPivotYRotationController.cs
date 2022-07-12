@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class CameraPivotYRotationController : MonoBehaviour
 {
     private GameObject player;
     private Quaternion originalAngle;
-    private const int invertRoatationSpeed = -90;
+    private const int roatationSpeed = 120;
 
     private void OnEnable()
     {
@@ -26,10 +26,9 @@ public class CameraController : MonoBehaviour
     {
         var horizontalInput = Input.GetAxis("Horizontal");
 
-        var rotation = horizontalInput * invertRoatationSpeed * Time.deltaTime;
+        var rotation = horizontalInput * roatationSpeed * Time.deltaTime;
 
-        transform.RotateAround(player.transform.position, Vector3.down, rotation);
-
+        transform.RotateAround(player.transform.position, Vector3.up, rotation);
     }
 
     private void LateUpdate()
@@ -41,5 +40,4 @@ public class CameraController : MonoBehaviour
     {
         transform.SetPositionAndRotation(transform.position, originalAngle);
     }
-
 }
