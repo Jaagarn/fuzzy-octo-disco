@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     private float verticalInput;
 
     private Rigidbody playerRb;
-    private GameObject mainCamera;
+    private GameObject cameraHolder;
     private GameObject uiFadeToBlack;
     private PlayerTeleportLocation currentPlayerResetLocation;
 
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         playerRb = GetComponent<Rigidbody>();
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        cameraHolder = GameObject.FindGameObjectWithTag("CameraHolder");
         uiFadeToBlack = GameObject.FindGameObjectWithTag("UIFadeToBlack");
         uiFadeToBlack.SetActive(false);
         var postition = GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation.MainHub);
@@ -138,10 +138,8 @@ public class PlayerController : MonoBehaviour
     {
         if (!isBreaking && isGrounded && !(playerRb.velocity.magnitude >= maxSpeed))
         {
-            // Create new vector3 from camera vector3 without rotation
-            Vector3 moveDirectionVector = new Vector3(mainCamera.transform.forward.x, 0, mainCamera.transform.forward.z);
-            Vector3 verticallVector = moveDirectionVector * verticalInput * speed * speedModifier;
-            playerRb.AddForce(verticallVector);
+            var verticalVector = cameraHolder.transform.forward * verticalInput * speed * speedModifier;
+            playerRb.AddForce(verticalVector);
         }
     }
 

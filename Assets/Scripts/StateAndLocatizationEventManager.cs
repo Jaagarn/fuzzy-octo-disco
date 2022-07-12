@@ -11,7 +11,6 @@ public class StateAndLocatizationEventManager : MonoBehaviour
     public delegate void GameResumed();
     public static event GameResumed OnGameResumed;
 
-
     public delegate void LocationChange(PlayerTeleportLocation teleportLocation);
     public static event LocationChange OnLocationChange;
 
