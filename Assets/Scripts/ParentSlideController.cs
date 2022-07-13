@@ -23,6 +23,16 @@ public class ParentSlideController : MonoBehaviour
     private bool isVisible = false;
     private float timeToWait;
 
+    private void OnEnable()
+    {
+        StateAndLocatizationEventManager.OnReset += ResetEventHandler;
+    }
+
+    private void OnDisable()
+    {
+        StateAndLocatizationEventManager.OnReset -= ResetEventHandler;
+    }
+
     // Broadcast to all children to become visible
     private void Start()
     {
@@ -83,6 +93,16 @@ public class ParentSlideController : MonoBehaviour
     private void BroadcastMaterialSelection(Material transparentMaterial, Material opaqueMaterial)
     {
         transform.BroadcastMessage("SetMaterial", new Material[2] {transparentMaterial, opaqueMaterial});
+    }
+
+    private void ResetEventHandler()
+    {
+        if (isDisappearing)
+        {
+            isVisible = startAsInvisible;   
+            transform.BroadcastMessage(isVisible ? "BecomeInvisible" : "BecomeVisible");
+            timer = 0.0f;
+        }
     }
 
     // Parent needs to implement methods called by broadcast
