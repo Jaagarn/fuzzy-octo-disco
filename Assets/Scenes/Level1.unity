@@ -278,6 +278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 10
+  invisibleTime: 2
 --- !u!1001 &54621284
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1353,6 +1355,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 10
+  invisibleTime: 2
 --- !u!4 &252178923 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4086989213441758771, guid: 62bc29af3f0b560438c404b7d5df29e9, type: 3}
@@ -2302,6 +2306,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!1 &384923476
 GameObject:
   m_ObjectHideFlags: 0
@@ -3553,6 +3559,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!4 &596061218 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1676494480207207480, guid: 15c80094949cead4282b462218109126, type: 3}
@@ -5805,6 +5813,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 10
+  invisibleTime: 2
 --- !u!1001 &1269393687
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6127,6 +6137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!4 &1388613097 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4086989213441758771, guid: 62bc29af3f0b560438c404b7d5df29e9, type: 3}
@@ -7661,6 +7673,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!1 &1697661901
 GameObject:
   m_ObjectHideFlags: 0
@@ -7823,6 +7837,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3789484019475316955, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3789484019475316955, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: cec10f785d7f15546979ef6b1bee2ead, type: 2}
@@ -7963,6 +7981,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!4 &1783117892 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8864494254916516134, guid: d3c0a20b78a57334d9937787eb844f0c, type: 3}
@@ -8329,6 +8349,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!4 &1869654186 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7998225134548104167, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
@@ -8490,6 +8512,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!1 &1988103314
 GameObject:
   m_ObjectHideFlags: 0
@@ -8602,6 +8626,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!4 &1997940437 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7998225134548104167, guid: 4a0bf16b54dabfe4da817492c2582942, type: 3}
@@ -9011,6 +9037,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d7a5f8f4f328046a2290a6615b0aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visableTime: 8
+  invisibleTime: 2
 --- !u!1001 &2097392408
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9215,6 +9243,10 @@ PrefabInstance:
     - target: {fileID: 2376657957724149535, guid: 043081121913db541b7347bb65ee17d8, type: 3}
       propertyPath: m_Name
       value: BackToMainHubMarker
+      objectReference: {fileID: 0}
+    - target: {fileID: 2376657957724149730, guid: 043081121913db541b7347bb65ee17d8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2376657957724149732, guid: 043081121913db541b7347bb65ee17d8, type: 3}
       propertyPath: m_RootOrder
