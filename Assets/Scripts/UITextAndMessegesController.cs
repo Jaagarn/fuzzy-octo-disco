@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// FirstTrack is also called the green one
 /// ThridTrack is also called the yellow one
 /// </summary>
-public class LapTimer : MonoBehaviour
+public class UITextAndMessegesController : MonoBehaviour
 {
     PlayerTeleportLocation playerCurrentLocation = PlayerTeleportLocation.MainHub;
 
@@ -32,6 +32,10 @@ public class LapTimer : MonoBehaviour
     private GameObject greenTimeWrapper;
     private GameObject bestCheckPointTimeGreenText;
     private GameObject bestLapTimeGreenText;
+
+    private GameObject redTimeWrapper;
+    private GameObject bestCheckPointTimeRedText;
+    private GameObject bestLapTimeRedText;
 
     private GameObject yellowTimeWrapper;
     private GameObject bestCheckPointTimeYellowText;
@@ -60,6 +64,10 @@ public class LapTimer : MonoBehaviour
         bestLapTimeGreenText = GameObject.FindGameObjectWithTag("BestLapTimeGreenText");
         greenTimeWrapper = GameObject.FindGameObjectWithTag("BestGreenWrapper");
 
+        bestCheckPointTimeRedText = GameObject.FindGameObjectWithTag("BestCheckPointTimeRedText");
+        bestLapTimeRedText = GameObject.FindGameObjectWithTag("BestLapTimeRedText");
+        redTimeWrapper = GameObject.FindGameObjectWithTag("BestRedWrapper");
+
         bestCheckPointTimeYellowText = GameObject.FindGameObjectWithTag("BestCheckPointTimeYellowText");
         bestLapTimeYellowText = GameObject.FindGameObjectWithTag("BestLapTimeYellowText");
         yellowTimeWrapper = GameObject.FindGameObjectWithTag("BestYellowWrapper");
@@ -67,7 +75,9 @@ public class LapTimer : MonoBehaviour
         bestTimeWrapper = GameObject.FindGameObjectWithTag("BestTimeWrapper");
 
         greenTimeWrapper.SetActive(false);
+        redTimeWrapper.SetActive(false);
         yellowTimeWrapper.SetActive(false);
+
         MainHubUI();
     }
 
@@ -155,6 +165,14 @@ public class LapTimer : MonoBehaviour
                     bestCheckPointTimeGreenText.GetComponent<Text>().text = FormatTime(bestFirstTrackCheckPointTime);
                 }
                 break;
+            case PlayerTeleportLocation.SecondTrack:
+                if (bestFirstTrackCheckPointTime == default ||
+                    checkPointTime < bestFirstTrackCheckPointTime)
+                {
+                    bestFirstTrackCheckPointTime = checkPointTime;
+                    bestCheckPointTimeRedText.GetComponent<Text>().text = FormatTime(bestFirstTrackCheckPointTime);
+                }
+                break;
             case PlayerTeleportLocation.ThirdTrack:
                 if (bestThirdTrackCheckPointTime == default ||
                     checkPointTime < bestThirdTrackCheckPointTime)
@@ -181,6 +199,16 @@ public class LapTimer : MonoBehaviour
                 }
                 if (!greenTimeWrapper.activeSelf)
                     greenTimeWrapper.SetActive(true);
+                break;
+            case PlayerTeleportLocation.SecondTrack:
+                if (bestFirstTrackTime == default ||
+                    lapTime < bestFirstTrackTime)
+                {
+                    bestFirstTrackTime = lapTime;
+                    bestLapTimeRedText.GetComponent<Text>().text = FormatTime(bestFirstTrackTime);
+                }
+                if (!redTimeWrapper.activeSelf)
+                    redTimeWrapper.SetActive(true);
                 break;
             case PlayerTeleportLocation.ThirdTrack:
                 if (bestThirdTrackTime == default ||
