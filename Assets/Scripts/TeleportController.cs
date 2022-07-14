@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum PlayerTeleportLocation
@@ -29,5 +30,12 @@ public class TeleportController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public static Vector3 GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation teleportLocation)
+    {
+        return playerPostitionTeleports.Where(p => p.Key.Equals(teleportLocation))
+                                       .Select(p => p.Value)
+                                       .FirstOrDefault();
     }
 }

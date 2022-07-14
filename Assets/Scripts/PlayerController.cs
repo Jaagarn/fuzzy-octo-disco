@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -43,7 +41,7 @@ public class PlayerController : MonoBehaviour
         cameraHolder = GameObject.FindGameObjectWithTag("CameraHolder");
         uiFadeToBlack = GameObject.FindGameObjectWithTag("UIFadeToBlack");
         uiFadeToBlack.SetActive(false);
-        var postition = GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation.MainHub);
+        var postition = TeleportController.GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation.MainHub);
         playerRb.position = postition;
         currentPlayerResetLocation = PlayerTeleportLocation.MainHub;
     }
@@ -135,25 +133,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private Vector3 GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation teleportLocation)
-    {
-        return TeleportController.playerPostitionTeleports.Where(p => p.Key.Equals(teleportLocation))
-                                                          .Select(p => p.Value)
-                                                          .FirstOrDefault();
-    }
-
     /// <summary>
     /// A metod that teleports the player to a new location. Activates/deactivates the ui animation that handels fade to black
-    /// and runs it. 
+    /// and runs it. Sends out Reset and LocationChanged events. But only LocationChanged event IF you put newResetLocation
+    /// to true. Otherwise it is assumed you teleport to a "sub-location" contained within the reset location.
     /// </summary>
-    /// <param name="teleportTo">
-    /// Vector3 for the new position
-    /// </param>
-    /// <param name="teleportString">
-    /// Set teleportString if you want to set inMainHub bool. If you don't give it a value, isMainHub will be false.
+    /// <param name="teleportLocation">
+    /// PlayerTeleportLocation enum for the new position.
     /// </param>
     /// <param name="newResetPostition">
-    /// If you want the teleportTo Vector3 to be the new resetPosition 
+    /// If you want the teleportLocation PlayerTeleportLocation to be the new resetPosition 
     /// </param>
     private void FadeUITeleport(
         PlayerTeleportLocation teleportLocation,
@@ -164,7 +153,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DoFadeUITeleport(PlayerTeleportLocation teleportLocation, bool newResetPostition)
     {
-        var teleportLocationVector3 = GetVector3FromPlayerTeleportLocation(teleportLocation);
+        var teleportLocationVector3 = TeleportController.GetVector3FromPlayerTeleportLocation(teleportLocation);
         isControlsDisabled = true;
         uiFadeToBlack.SetActive(true);
         teleportUIAnimator.SetTrigger("StartTeleport");
