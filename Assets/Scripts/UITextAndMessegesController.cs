@@ -12,6 +12,7 @@ public class UITextAndMessegesController : MonoBehaviour
     private bool hasStartedLap = false;
     private bool inMainHub = true;
     private bool hasPassedCheckPoint = false;
+    private bool allTracksClearedEventSent = false;
 
     private float startTime;
     private float elapsedTime;
@@ -19,6 +20,9 @@ public class UITextAndMessegesController : MonoBehaviour
 
     private float bestFirstTrackTime;
     private float bestFirstTrackCheckPointTime;
+
+    private float bestSecondTrackTime;
+    private float bestSecondTrackCheckPointTime;
 
     private float bestThirdTrackTime;
     private float bestThirdTrackCheckPointTime;
@@ -153,12 +157,12 @@ public class UITextAndMessegesController : MonoBehaviour
         bestTimeWrapper.SetActive(false);
     }
 
-    private void UpdateCheckPointTimeIfImproved() 
+    private void UpdateCheckPointTimeIfImproved()
     {
         switch (playerCurrentLocation)
         {
             case PlayerTeleportLocation.FirstTrack:
-                if (bestFirstTrackCheckPointTime == default || 
+                if (bestFirstTrackCheckPointTime == default ||
                     checkPointTime < bestFirstTrackCheckPointTime)
                 {
                     bestFirstTrackCheckPointTime = checkPointTime;
@@ -166,11 +170,11 @@ public class UITextAndMessegesController : MonoBehaviour
                 }
                 break;
             case PlayerTeleportLocation.SecondTrack:
-                if (bestFirstTrackCheckPointTime == default ||
-                    checkPointTime < bestFirstTrackCheckPointTime)
+                if (bestSecondTrackCheckPointTime == default ||
+                    checkPointTime < bestSecondTrackCheckPointTime)
                 {
-                    bestFirstTrackCheckPointTime = checkPointTime;
-                    bestCheckPointTimeRedText.GetComponent<Text>().text = FormatTime(bestFirstTrackCheckPointTime);
+                    bestSecondTrackCheckPointTime = checkPointTime;
+                    bestCheckPointTimeRedText.GetComponent<Text>().text = FormatTime(bestSecondTrackCheckPointTime);
                 }
                 break;
             case PlayerTeleportLocation.ThirdTrack:
@@ -198,17 +202,23 @@ public class UITextAndMessegesController : MonoBehaviour
                     bestLapTimeGreenText.GetComponent<Text>().text = FormatTime(bestFirstTrackTime);
                 }
                 if (!greenTimeWrapper.activeSelf)
+                {
                     greenTimeWrapper.SetActive(true);
+                    StateAndLocatizationEventManager.RaiseOnFirstTrackCleared();
+                }
                 break;
             case PlayerTeleportLocation.SecondTrack:
-                if (bestFirstTrackTime == default ||
-                    lapTime < bestFirstTrackTime)
+                if (bestSecondTrackTime == default ||
+                    lapTime < bestSecondTrackTime)
                 {
-                    bestFirstTrackTime = lapTime;
-                    bestLapTimeRedText.GetComponent<Text>().text = FormatTime(bestFirstTrackTime);
+                    bestSecondTrackTime = lapTime;
+                    bestLapTimeRedText.GetComponent<Text>().text = FormatTime(bestSecondTrackTime);
                 }
                 if (!redTimeWrapper.activeSelf)
+                {
                     redTimeWrapper.SetActive(true);
+                    StateAndLocatizationEventManager.RaiseOnSecondTrackCleared();
+                }
                 break;
             case PlayerTeleportLocation.ThirdTrack:
                 if (bestThirdTrackTime == default ||
@@ -218,7 +228,10 @@ public class UITextAndMessegesController : MonoBehaviour
                     bestLapTimeYellowText.GetComponent<Text>().text = FormatTime(bestThirdTrackTime);
                 }
                 if (!yellowTimeWrapper.activeSelf)
+                {
                     yellowTimeWrapper.SetActive(true);
+                    StateAndLocatizationEventManager.RaiseOnThirdTrackCleared();
+                }
                 break;
             default:
                 break;
@@ -229,9 +242,14 @@ public class UITextAndMessegesController : MonoBehaviour
     {
         playerCurrentLocation = teleportLocation;
 
-        switch(teleportLocation)
+        switch (teleportLocation)
         {
             case PlayerTeleportLocation.MainHub:
+                if (AllTracksCleared() && !allTracksClearedEventSent)
+                {
+                    StateAndLocatizationEventManager.RaiseOnAllTracksCleared();
+                    allTracksClearedEventSent = true;
+                }
                 inMainHub = true;
                 MainHubUI();
                 break;
@@ -240,6 +258,13 @@ public class UITextAndMessegesController : MonoBehaviour
                 TrackUI();
                 break;
         }
-            
+
+    }
+
+    private bool AllTracksCleared()
+    {
+        return greenTimeWrapper.activeSelf &&
+               redTimeWrapper.activeSelf &&
+               yellowTimeWrapper.activeSelf;
     }
 }
