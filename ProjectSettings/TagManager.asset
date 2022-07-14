@@ -28,6 +28,8 @@ TagManager:
   - LapTimerWrapper
   - BestGreenWrapper
   - BestYellowWrapper
+  - FourthCamera
+  - SecondTrackTeleport
   layers:
   - Default
   - TransparentFX
