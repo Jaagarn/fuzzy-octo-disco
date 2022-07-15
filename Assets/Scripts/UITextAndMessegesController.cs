@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,9 @@ using UnityEngine.UI;
 /// </summary>
 public class UITextAndMessegesController : MonoBehaviour
 {
+    [SerializeField]
+    private Animator messageTextAnimator;
+
     PlayerTeleportLocation playerCurrentLocation = PlayerTeleportLocation.MainHub;
 
     private bool hasStartedLap = false;
@@ -26,6 +30,8 @@ public class UITextAndMessegesController : MonoBehaviour
 
     private float bestThirdTrackTime;
     private float bestThirdTrackCheckPointTime;
+
+    private GameObject messageText;
 
     private GameObject lapTimerText;
     private GameObject lapTimerCheckPointText;
@@ -77,7 +83,9 @@ public class UITextAndMessegesController : MonoBehaviour
         yellowTimeWrapper = GameObject.FindGameObjectWithTag("BestYellowWrapper");
 
         bestTimeWrapper = GameObject.FindGameObjectWithTag("BestTimeWrapper");
+        messageText = GameObject.FindGameObjectWithTag("MessageText");
 
+        messageText.SetActive(false);
         greenTimeWrapper.SetActive(false);
         redTimeWrapper.SetActive(false);
         yellowTimeWrapper.SetActive(false);
@@ -113,6 +121,7 @@ public class UITextAndMessegesController : MonoBehaviour
             var lapTime = elapsedTime;
             hasStartedLap = false;
             hasPassedCheckPoint = false;
+            DisplayMessageText("Finish!!");
 
             UpdateLapTimeIfImproved(lapTime);
         }
@@ -122,6 +131,7 @@ public class UITextAndMessegesController : MonoBehaviour
             hasPassedCheckPoint = true;
             checkPointTime = elapsedTime;
             lapTimerCheckPointText.GetComponent<Text>().text = FormatTime(checkPointTime);
+            DisplayMessageText("Halfway!!");
 
             UpdateCheckPointTimeIfImproved();
         }
@@ -131,6 +141,8 @@ public class UITextAndMessegesController : MonoBehaviour
             hasStartedLap = true;
 
             lapTimerCheckPointText.GetComponent<Text>().text = string.Empty;
+
+            DisplayMessageText("Start!");
             startTime = Time.time;
         }
 
@@ -266,5 +278,25 @@ public class UITextAndMessegesController : MonoBehaviour
         return greenTimeWrapper.activeSelf &&
                redTimeWrapper.activeSelf &&
                yellowTimeWrapper.activeSelf;
+    }
+
+    private void DisplayMessageText(string message)
+    {
+        StartCoroutine(DoDisplayMessageText(message));
+    }
+
+    private IEnumerator DoDisplayMessageText(string message)
+    {
+        messageText.SetActive(true);
+        messageText.GetComponent<Text>().text = message;
+        messageTextAnimator.SetTrigger("DisplayMessageText");
+
+        yield return new WaitForSeconds(0.5f);
+
+        messageTextAnimator.SetTrigger("RemoveMessageText");
+
+        yield return new WaitForSeconds(0.25f);
+
+        messageText.SetActive(false);
     }
 }

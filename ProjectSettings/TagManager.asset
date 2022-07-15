@@ -31,6 +31,11 @@ TagManager:
   - BestLapTimeRedText
   - BestCheckPointTimeRedText
   - BestRedWrapper
+  - FirstTrackMarker
+  - SecondTrackMarker
+  - ThirdTrackMarker
+  - FourthCamera
+  - MessageText
   layers:
   - Default
   - TransparentFX

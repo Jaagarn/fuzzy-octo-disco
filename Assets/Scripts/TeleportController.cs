@@ -22,16 +22,6 @@ public class TeleportController : MonoBehaviour
         { PlayerTeleportLocation.ThirdTrack, new Vector3( 198.67f, 5.9f, 96.27f ) }
     };
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public static Vector3 GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation teleportLocation)
     {
         return playerPostitionTeleports.Where(p => p.Key.Equals(teleportLocation))
