@@ -33,7 +33,10 @@ public class CameraPivotYRotationController : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.position = player.transform.position;
+        var currentPosition = transform.position;
+        var nextPositon = player.transform.position;
+
+        transform.position = Vector3.Lerp(currentPosition, nextPositon, 1);
     }
 
     private void ResetEventHandler()

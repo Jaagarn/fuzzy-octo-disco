@@ -14,7 +14,7 @@ public class CameraPivotXRotationController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.R))
+        if (Input.GetKey(KeyCode.V))
         {
             hasVerticalInput = true;
             positveOrNegativeAngle = true;

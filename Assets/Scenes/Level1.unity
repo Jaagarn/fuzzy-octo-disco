@@ -1397,7 +1397,7 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
+    m_LineSpacing: 0.77
   m_Text: 'Movement:
 
     WASD (Or arrow keys)
@@ -1414,10 +1414,15 @@ MonoBehaviour:
     Spacebar
 
 
-    Change camera angle:
+    Reset:
 
-    R and
-    F'
+    R
+
+
+    Change camera
+    angle:
+
+    F and V'
 --- !u!222 &186873513
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6397,6 +6402,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 557196701}
     m_Modifications:
+    - target: {fileID: 2101685498831541749, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3793622225335709522, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
       propertyPath: m_Name
       value: CameraPivotYRotation
@@ -6407,15 +6416,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3793622225335709525, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 113.244
       objectReference: {fileID: 0}
     - target: {fileID: 3793622225335709525, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 14.19
       objectReference: {fileID: 0}
     - target: {fileID: 3793622225335709525, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -8.8
       objectReference: {fileID: 0}
     - target: {fileID: 3793622225335709525, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6444,6 +6453,10 @@ PrefabInstance:
     - target: {fileID: 3793622225335709525, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3793622227187477774, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab9d3cbc44a47b94c8f4ac972d064bbb, type: 3}
