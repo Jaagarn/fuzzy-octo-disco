@@ -14,6 +14,18 @@ public class StateAndLocatizationEventManager : MonoBehaviour
     public delegate void LocationChange(PlayerTeleportLocation teleportLocation);
     public static event LocationChange OnLocationChange;
 
+    public delegate void FirstTrackCleared();
+    public static event FirstTrackCleared OnFirstTrackCleared;
+
+    public delegate void SecondTrackCleared();
+    public static event SecondTrackCleared OnSecondTrackCleared;
+
+    public delegate void ThirdTrackCleared();
+    public static event ThirdTrackCleared OnThirdTrackCleared;
+
+    public delegate void AllTracksCleared();
+    public static event AllTracksCleared OnAllTracksCleared;
+
     public static void RaiseOnReset()
     {
         OnReset?.Invoke();
@@ -31,6 +43,26 @@ public class StateAndLocatizationEventManager : MonoBehaviour
     public static void RaiseOnLocationChange(PlayerTeleportLocation teleportLocation)
     {
         OnLocationChange?.Invoke(teleportLocation);
+    }
+
+    public static void RaiseOnFirstTrackCleared()
+    {
+        OnFirstTrackCleared?.Invoke();
+    }
+
+    public static void RaiseOnSecondTrackCleared()
+    {
+        OnSecondTrackCleared?.Invoke();
+    }
+
+    public static void RaiseOnThirdTrackCleared()
+    {
+        OnThirdTrackCleared?.Invoke();
+    }
+
+    public static void RaiseOnAllTracksCleared()
+    {
+        OnAllTracksCleared?.Invoke();
     }
 
 }

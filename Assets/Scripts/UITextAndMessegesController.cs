@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +8,16 @@ using UnityEngine.UI;
 /// </summary>
 public class UITextAndMessegesController : MonoBehaviour
 {
+    [SerializeField]
+    private Animator messageTextAnimator;
+
     PlayerTeleportLocation playerCurrentLocation = PlayerTeleportLocation.MainHub;
 
     private bool hasStartedLap = false;
     private bool inMainHub = true;
     private bool hasPassedCheckPoint = false;
+    private bool allTracksClearedEventSent = false;
+    private bool displayBestTrackTimes = false;
 
     private float startTime;
     private float elapsedTime;
@@ -20,12 +26,21 @@ public class UITextAndMessegesController : MonoBehaviour
     private float bestFirstTrackTime;
     private float bestFirstTrackCheckPointTime;
 
+    private float bestSecondTrackTime;
+    private float bestSecondTrackCheckPointTime;
+
     private float bestThirdTrackTime;
     private float bestThirdTrackCheckPointTime;
+
+    private GameObject messageText;
 
     private GameObject lapTimerText;
     private GameObject lapTimerCheckPointText;
     private GameObject lapTimerTextWrapper;
+
+    private GameObject bestTimeInCurrentTrackLapTimeText;
+    private GameObject bestTimeInCurrentTrackCheckPointText;
+    private GameObject bestTimeInCurrentTrackWrapper;
 
     private GameObject bestTimeWrapper;
 
@@ -40,6 +55,13 @@ public class UITextAndMessegesController : MonoBehaviour
     private GameObject yellowTimeWrapper;
     private GameObject bestCheckPointTimeYellowText;
     private GameObject bestLapTimeYellowText;
+
+    private const string startMessage =
+        "Rollers the game\n" +
+        "by\n" +
+        "Jaagarn\n" +
+        "with help from\n" +
+        "Keeso";
 
 
     private void OnEnable()
@@ -60,6 +82,10 @@ public class UITextAndMessegesController : MonoBehaviour
         lapTimerCheckPointText = GameObject.FindGameObjectWithTag("LapTimerCheckPointText");
         lapTimerTextWrapper = GameObject.FindGameObjectWithTag("LapTimerWrapper");
 
+        bestTimeInCurrentTrackLapTimeText = GameObject.FindGameObjectWithTag("BestTimeInCurrentTrackLapTimeText");
+        bestTimeInCurrentTrackCheckPointText = GameObject.FindGameObjectWithTag("BestTimeInCurrentTrackCheckPointTimeText");
+        bestTimeInCurrentTrackWrapper = GameObject.FindGameObjectWithTag("BestTimeInCurrentTrackWrapper");
+
         bestCheckPointTimeGreenText = GameObject.FindGameObjectWithTag("BestCheckPointTimeGreenText");
         bestLapTimeGreenText = GameObject.FindGameObjectWithTag("BestLapTimeGreenText");
         greenTimeWrapper = GameObject.FindGameObjectWithTag("BestGreenWrapper");
@@ -73,12 +99,16 @@ public class UITextAndMessegesController : MonoBehaviour
         yellowTimeWrapper = GameObject.FindGameObjectWithTag("BestYellowWrapper");
 
         bestTimeWrapper = GameObject.FindGameObjectWithTag("BestTimeWrapper");
+        messageText = GameObject.FindGameObjectWithTag("MessageText");
+
+        DisplayMessageText(startMessage, 10.0f);
 
         greenTimeWrapper.SetActive(false);
         redTimeWrapper.SetActive(false);
         yellowTimeWrapper.SetActive(false);
+        bestTimeWrapper.SetActive(false);
 
-        MainHubUI();
+        lapTimerTextWrapper.SetActive(false);
     }
 
     private void Update()
@@ -109,8 +139,12 @@ public class UITextAndMessegesController : MonoBehaviour
             var lapTime = elapsedTime;
             hasStartedLap = false;
             hasPassedCheckPoint = false;
+            DisplayMessageText("Finish!!");
 
+            bestTimeInCurrentTrackWrapper.SetActive(true);
             UpdateLapTimeIfImproved(lapTime);
+
+            UpdateCurrentTrackBestTime();
         }
 
         if (other.CompareTag("CheckPoint") && hasStartedLap && !hasPassedCheckPoint)
@@ -118,6 +152,7 @@ public class UITextAndMessegesController : MonoBehaviour
             hasPassedCheckPoint = true;
             checkPointTime = elapsedTime;
             lapTimerCheckPointText.GetComponent<Text>().text = FormatTime(checkPointTime);
+            DisplayMessageText("Halfway!!");
 
             UpdateCheckPointTimeIfImproved();
         }
@@ -127,9 +162,39 @@ public class UITextAndMessegesController : MonoBehaviour
             hasStartedLap = true;
 
             lapTimerCheckPointText.GetComponent<Text>().text = string.Empty;
+
+            bestTimeInCurrentTrackWrapper.SetActive(false);
+            DisplayMessageText("Start!");
             startTime = Time.time;
         }
 
+    }
+
+    private void UpdateCurrentTrackBestTime()
+    {
+        switch (playerCurrentLocation)
+        {
+            case PlayerTeleportLocation.FirstTrack:
+                bestTimeInCurrentTrackCheckPointText.GetComponent<Text>().text = 
+                    bestFirstTrackCheckPointTime == default ? "00:00:00" : FormatTime(bestFirstTrackCheckPointTime);
+                bestTimeInCurrentTrackLapTimeText.GetComponent<Text>().text = 
+                    bestFirstTrackTime == default ? "00:00:00" : FormatTime(bestFirstTrackTime);
+                break;
+            case PlayerTeleportLocation.SecondTrack:
+                bestTimeInCurrentTrackCheckPointText.GetComponent<Text>().text = 
+                    bestSecondTrackCheckPointTime == default ? "00:00:00" : FormatTime(bestSecondTrackCheckPointTime);
+                bestTimeInCurrentTrackLapTimeText.GetComponent<Text>().text = 
+                    bestSecondTrackTime == default ? "00:00:00" : FormatTime(bestSecondTrackTime);
+                break;
+            case PlayerTeleportLocation.ThirdTrack:
+                bestTimeInCurrentTrackCheckPointText.GetComponent<Text>().text = 
+                    bestThirdTrackCheckPointTime == default ? "00:00:00" : FormatTime(bestThirdTrackCheckPointTime);
+                bestTimeInCurrentTrackLapTimeText.GetComponent<Text>().text = 
+                    bestThirdTrackTime == default ? "00:00:00" : FormatTime(bestThirdTrackTime);
+                break;
+            default:
+                break;
+        }
     }
 
     private void ResetEventHandler()
@@ -139,12 +204,23 @@ public class UITextAndMessegesController : MonoBehaviour
         hasStartedLap = false;
         hasPassedCheckPoint = false;
         lapTimerCheckPointText.GetComponent<Text>().text = string.Empty;
+        if (messageText.activeSelf)
+        {
+            messageText.SetActive(false);
+            StopCoroutine(DoDisplayMessageText(default, default));
+        }
+        if(playerCurrentLocation != PlayerTeleportLocation.MainHub)
+        {
+            UpdateCurrentTrackBestTime();
+            bestTimeInCurrentTrackWrapper.SetActive(true);
+        }
     }
 
     private void MainHubUI()
     {
         lapTimerTextWrapper.SetActive(false);
-        bestTimeWrapper.SetActive(true);
+        if(displayBestTrackTimes)
+            bestTimeWrapper.SetActive(true);
     }
 
     private void TrackUI()
@@ -153,12 +229,12 @@ public class UITextAndMessegesController : MonoBehaviour
         bestTimeWrapper.SetActive(false);
     }
 
-    private void UpdateCheckPointTimeIfImproved() 
+    private void UpdateCheckPointTimeIfImproved()
     {
         switch (playerCurrentLocation)
         {
             case PlayerTeleportLocation.FirstTrack:
-                if (bestFirstTrackCheckPointTime == default || 
+                if (bestFirstTrackCheckPointTime == default ||
                     checkPointTime < bestFirstTrackCheckPointTime)
                 {
                     bestFirstTrackCheckPointTime = checkPointTime;
@@ -166,11 +242,11 @@ public class UITextAndMessegesController : MonoBehaviour
                 }
                 break;
             case PlayerTeleportLocation.SecondTrack:
-                if (bestFirstTrackCheckPointTime == default ||
-                    checkPointTime < bestFirstTrackCheckPointTime)
+                if (bestSecondTrackCheckPointTime == default ||
+                    checkPointTime < bestSecondTrackCheckPointTime)
                 {
-                    bestFirstTrackCheckPointTime = checkPointTime;
-                    bestCheckPointTimeRedText.GetComponent<Text>().text = FormatTime(bestFirstTrackCheckPointTime);
+                    bestSecondTrackCheckPointTime = checkPointTime;
+                    bestCheckPointTimeRedText.GetComponent<Text>().text = FormatTime(bestSecondTrackCheckPointTime);
                 }
                 break;
             case PlayerTeleportLocation.ThirdTrack:
@@ -198,17 +274,24 @@ public class UITextAndMessegesController : MonoBehaviour
                     bestLapTimeGreenText.GetComponent<Text>().text = FormatTime(bestFirstTrackTime);
                 }
                 if (!greenTimeWrapper.activeSelf)
+                {
+                    displayBestTrackTimes = true;
                     greenTimeWrapper.SetActive(true);
+                    StateAndLocatizationEventManager.RaiseOnFirstTrackCleared();
+                }
                 break;
             case PlayerTeleportLocation.SecondTrack:
-                if (bestFirstTrackTime == default ||
-                    lapTime < bestFirstTrackTime)
+                if (bestSecondTrackTime == default ||
+                    lapTime < bestSecondTrackTime)
                 {
-                    bestFirstTrackTime = lapTime;
-                    bestLapTimeRedText.GetComponent<Text>().text = FormatTime(bestFirstTrackTime);
+                    bestSecondTrackTime = lapTime;
+                    bestLapTimeRedText.GetComponent<Text>().text = FormatTime(bestSecondTrackTime);
                 }
                 if (!redTimeWrapper.activeSelf)
+                {
                     redTimeWrapper.SetActive(true);
+                    StateAndLocatizationEventManager.RaiseOnSecondTrackCleared();
+                }
                 break;
             case PlayerTeleportLocation.ThirdTrack:
                 if (bestThirdTrackTime == default ||
@@ -218,7 +301,10 @@ public class UITextAndMessegesController : MonoBehaviour
                     bestLapTimeYellowText.GetComponent<Text>().text = FormatTime(bestThirdTrackTime);
                 }
                 if (!yellowTimeWrapper.activeSelf)
+                {
                     yellowTimeWrapper.SetActive(true);
+                    StateAndLocatizationEventManager.RaiseOnThirdTrackCleared();
+                }
                 break;
             default:
                 break;
@@ -229,17 +315,56 @@ public class UITextAndMessegesController : MonoBehaviour
     {
         playerCurrentLocation = teleportLocation;
 
-        switch(teleportLocation)
+        switch (teleportLocation)
         {
             case PlayerTeleportLocation.MainHub:
+                if (AllTracksCleared() && !allTracksClearedEventSent)
+                {
+                    StateAndLocatizationEventManager.RaiseOnAllTracksCleared();
+                    allTracksClearedEventSent = true;
+                }
                 inMainHub = true;
                 MainHubUI();
                 break;
             default:
                 inMainHub = false;
                 TrackUI();
+                UpdateCurrentTrackBestTime();
+                bestTimeInCurrentTrackWrapper.SetActive(true);
                 break;
         }
-            
+
+    }
+
+    private bool AllTracksCleared()
+    {
+        return greenTimeWrapper.activeSelf &&
+               redTimeWrapper.activeSelf &&
+               yellowTimeWrapper.activeSelf;
+    }
+
+    private void DisplayMessageText(string message, float displayTime = 1.0f)
+    {
+        if(messageText.activeSelf)
+        {
+            messageText.SetActive(false);
+            StopCoroutine(DoDisplayMessageText(default, default));
+        }
+        StartCoroutine(DoDisplayMessageText(message, displayTime));
+    }
+
+    private IEnumerator DoDisplayMessageText(string message, float displayTime)
+    {
+        messageText.SetActive(true);
+        messageText.GetComponent<Text>().text = message;
+        messageTextAnimator.SetTrigger("DisplayMessageText");
+
+        yield return new WaitForSeconds(displayTime);
+
+        messageTextAnimator.SetTrigger("RemoveMessageText");
+
+        yield return new WaitForSeconds(0.25f);
+
+        messageText.SetActive(false);
     }
 }
