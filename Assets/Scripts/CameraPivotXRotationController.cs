@@ -14,14 +14,14 @@ public class CameraPivotXRotationController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.KeypadPlus))
+        if (Input.GetKey(KeyCode.R))
         {
             hasVerticalInput = true;
             positveOrNegativeAngle = true;
         }
 
 
-        if (Input.GetKey(KeyCode.KeypadMinus))
+        if (Input.GetKey(KeyCode.F))
         {
             hasVerticalInput = true;
             positveOrNegativeAngle = false;
@@ -51,9 +51,10 @@ public class CameraPivotXRotationController : MonoBehaviour
             xAngle -= Time.deltaTime * roatationSpeed;
         }
 
-        var currentAngels = transform.rotation.eulerAngles;
-        currentAngels.x = xAngle;
+        var currentAngles = transform.rotation.eulerAngles;
+        var nextAngles = currentAngles;
+        nextAngles.x = xAngle;
 
-        transform.eulerAngles = currentAngels;
+        transform.eulerAngles = nextAngles;
     }
 }
