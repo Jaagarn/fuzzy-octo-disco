@@ -40,7 +40,6 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         cameraHolder = GameObject.FindGameObjectWithTag("CameraHolder");
         uiFadeToBlack = GameObject.FindGameObjectWithTag("UIFadeToBlack");
-        uiFadeToBlack.SetActive(false);
         var postition = TeleportController.GetVector3FromPlayerTeleportLocation(PlayerTeleportLocation.MainHub);
         playerRb.position = postition;
         currentPlayerResetLocation = PlayerTeleportLocation.MainHub;

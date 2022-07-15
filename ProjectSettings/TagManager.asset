@@ -34,8 +34,10 @@ TagManager:
   - FirstTrackMarker
   - SecondTrackMarker
   - ThirdTrackMarker
-  - FourthCamera
   - MessageText
+  - BestTimeInCurrentTrackWrapper
+  - BestTimeInCurrentTrackLapTimeText
+  - BestTimeInCurrentTrackCheckPointTimeText
   layers:
   - Default
   - TransparentFX
